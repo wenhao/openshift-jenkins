@@ -1,2 +1,2 @@
-# docker-jenkins-oracle-jdk8-maven-git
-Docker Jenkins Oracle Java8 Maven Git
+# docker-jenkins-master-oracle-jdk8
+Docker Jenkins Oracle Java8
