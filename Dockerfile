@@ -1,5 +1,5 @@
 # Ubuntu 16.04 LTS
-# Oracle Java 1.8.0_141-b01 64 bit
+# Oracle Java 1.8 latest
 # Maven 3.5.0
 # Jenkins 2.32.3
 # git latest
@@ -8,30 +8,31 @@ FROM ubuntu:16.04
 
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
+LABEL version=v1.0.0
+LABEL description="Jenkins 2.0 Master Automation."
+
 # this is a non-interactive automated build - avoid some warning messages
 ENV DEBIAN_FRONTEND noninteractive
 
 # update dpkg repositories
-RUN apt-get update
+RUN apt-get update && \
+    apt-get -y install python-software-properties software-properties-common && \
+    add-apt-repository -y ppa:webupd8team/java && \
+    apt-get update && \
+    apt-get -y install wget && \
+    apt-get -y install git
 
-# install wget
-RUN apt-get install -y wget
+# install Java.
+RUN \
+  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+  add-apt-repository -y ppa:webupd8team/java && \
+  apt-get update && \
+  apt-get install -y oracle-java8-installer && \
+  rm -rf /var/lib/apt/lists/* && \
+  rm -rf /var/cache/oracle-jdk8-installer
 
-# set oracle java 8
-ENV JDK_VERSION 1.8.0_141
-ENV JDK_FILENAME jdk-8u144-linux-x64.tar.gz
-ENV JDK_DOWNLOAD_LINK http://download.oracle.com/otn-pub/java/jdk/8u144-b01/$JDK_FILENAME
-
-# download java, accepting the license agreement
-RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" -O /tmp/$JDK_FILENAME $JDK_DOWNLOAD_LINK
-
-# unpack java
-RUN mkdir /opt/java-oracle && tar -zxf /tmp/$JDK_FILENAME -C /opt/java-oracle/
-ENV JAVA_HOME /opt/java-oracle/jdk$JDK_VERSION
-ENV PATH $JAVA_HOME/bin:$PATH
-
-# configure symbolic links for the java and javac executables
-RUN update-alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 20000 && update-alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 20000
+# define commonly used JAVA_HOME variable
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # set maven version
 ENV MAVEN_VERSION 3.5.0
@@ -45,9 +46,6 @@ RUN ln -s /opt/apache-maven-$MAVEN_VERSION /opt/maven
 RUN ln -s /opt/maven/bin/mvn /usr/local/bin
 RUN rm -f /tmp/apache-maven-$MAVEN_VERSION.tar.gz
 ENV MAVEN_HOME /opt/maven
-
-# install git
-RUN apt-get install -y git
 
 # remove download archive files
 RUN apt-get clean
