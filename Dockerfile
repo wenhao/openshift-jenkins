@@ -101,7 +101,6 @@ RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
 
 ENV JENKINS_UC https://updates.jenkins.io
 ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
-RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
 
 # for main web interface:
 EXPOSE ${http_port}
@@ -122,9 +121,12 @@ COPY ./scripts/plugins.txt /usr/share/jenkins/ref/plugins.txt
 # avoid banner
 RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 
-RUN chmod +x /usr/local/bin/install-plugins.sh && \
+COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
+
+RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 
 USER ${user}
-COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
