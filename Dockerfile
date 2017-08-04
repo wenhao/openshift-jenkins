@@ -19,8 +19,7 @@ RUN apt-get update && \
     apt-get -y install python-software-properties software-properties-common && \
     add-apt-repository -y ppa:webupd8team/java && \
     apt-get update && \
-    apt-get -y install wget && \
-    apt-get -y install git
+    apt-get -y install wget curl zip
 
 # install Java.
 RUN \
@@ -35,17 +34,17 @@ RUN \
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # set maven version
-ENV MAVEN_VERSION 3.5.0
+#ARG maven_version=3.5.0
 
 # download maven
-RUN wget --no-verbose -O /tmp/apache-maven-$MAVEN_VERSION.tar.gz http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
+#RUN wget --no-verbose -O /tmp/apache-maven-$maven_version.tar.gz http://archive.apache.org/dist/maven/maven-3/$maven_version/binaries/apache-maven-$maven_version-bin.tar.gz
 
 # install maven
-RUN tar xzf /tmp/apache-maven-$MAVEN_VERSION.tar.gz -C /opt/
-RUN ln -s /opt/apache-maven-$MAVEN_VERSION /opt/maven
-RUN ln -s /opt/maven/bin/mvn /usr/local/bin
-RUN rm -f /tmp/apache-maven-$MAVEN_VERSION.tar.gz
-ENV MAVEN_HOME /opt/maven
+#RUN tar xzf /tmp/apache-maven-$maven_version.tar.gz -C /opt/
+#RUN ln -s /opt/apache-maven-$maven_version /opt/maven
+#RUN ln -s /opt/maven/bin/mvn /usr/local/bin
+#RUN rm -f /tmp/apache-maven-$maven_version.tar.gz
+#ENV MAVEN_HOME /opt/maven
 
 # remove download archive files
 RUN apt-get clean
@@ -83,7 +82,7 @@ ENV TINI_SHA 6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
 RUN curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 -o /bin/tini && chmod +x /bin/tini \
   && echo "$TINI_SHA  /bin/tini" | sha256sum -c -
 
-COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+COPY ./scripts/init.groovy /usr/share/jenkins/ref/init.groovy.d/init.groovy
 
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
@@ -112,12 +111,20 @@ EXPOSE ${agent_port}
 
 ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 
-USER ${user}
-
-COPY jenkins-support /usr/local/bin/jenkins-support
-COPY jenkins.sh /usr/local/bin/jenkins.sh
-ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
+COPY ./scripts/jenkins-support /usr/local/bin/jenkins-support
 
 # from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup /usr/share/jenkins/ref/plugins from a support bundle
-COPY plugins.sh /usr/local/bin/plugins.sh
-COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+COPY ./scripts/install-plugins.sh /usr/local/bin/install-plugins.sh
+
+# curl -sSL "http://username:password@myhost.com:port/pluginManager/api/xml?depth=1&xpath=/*/*/shortName|/*/*/version&wrapper=plugins" | perl -pe 's/.*?<shortName>([\w-]+).*?<version>([^<]+)()(<\/\w+>)+/\1 \2\n/g'|sed 's/ /:/'
+COPY ./scripts/plugins.txt /usr/share/jenkins/ref/plugins.txt
+
+# avoid banner
+RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+
+RUN chmod +x /usr/local/bin/install-plugins.sh && \
+    /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
+USER ${user}
+COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
+ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
