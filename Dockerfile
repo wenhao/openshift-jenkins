@@ -119,7 +119,7 @@ COPY ./scripts/install-plugins.sh /usr/local/bin/install-plugins.sh
 COPY ./scripts/plugins.txt /usr/share/jenkins/ref/plugins.txt
 
 # avoid banner
-RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+RUN echo 2.60.2 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 
 COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 
