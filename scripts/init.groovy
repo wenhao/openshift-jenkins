@@ -1,7 +1,7 @@
 #!groovy
 import hudson.security.*
 import jenkins.model.*
-import jenkins.install.*
+import static jenkins.install.InstallState.INITIAL_SETUP_COMPLETED
 import hudson.util.PluginServletFilter
 
 def instance = Jenkins.getInstance()
@@ -22,10 +22,5 @@ instance.setAuthorizationStrategy(strategy)
 
 // set executors
 instance.setNumExecutors(5)
-
-// skip setup wizard
-def wizard = instance.getSetupWizard()
-wizard.completeSetup()
-PluginServletFilter.removeFilter(wizard.FORCE_SETUP_WIZARD_FILTER)
 
 instance.save()

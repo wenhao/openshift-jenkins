@@ -1,15 +1,13 @@
 # Ubuntu 16.04 LTS
 # Oracle Java 1.8 latest
-# Maven 3.5.0
-# Jenkins 2.32.3
-# git latest
+# Jenkins 2.X.X
 
 FROM ubuntu:16.04
 
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
 LABEL version=v1.0.0
-LABEL description="Jenkins 2.0 Master Automation."
+LABEL description="Jenkins 2.X.X Master Automation."
 
 # this is a non-interactive automated build - avoid some warning messages
 ENV DEBIAN_FRONTEND noninteractive
@@ -35,16 +33,6 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # set maven version
 #ARG maven_version=3.5.0
-
-# download maven
-#RUN wget --no-verbose -O /tmp/apache-maven-$maven_version.tar.gz http://archive.apache.org/dist/maven/maven-3/$maven_version/binaries/apache-maven-$maven_version-bin.tar.gz
-
-# install maven
-#RUN tar xzf /tmp/apache-maven-$maven_version.tar.gz -C /opt/
-#RUN ln -s /opt/apache-maven-$maven_version /opt/maven
-#RUN ln -s /opt/maven/bin/mvn /usr/local/bin
-#RUN rm -f /tmp/apache-maven-$maven_version.tar.gz
-#ENV MAVEN_HOME /opt/maven
 
 # remove download archive files
 RUN apt-get clean
@@ -119,7 +107,8 @@ COPY ./scripts/install-plugins.sh /usr/local/bin/install-plugins.sh
 COPY ./scripts/plugins.txt /usr/share/jenkins/ref/plugins.txt
 
 # avoid banner
-RUN echo 2.60.2 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+RUN echo -n ${JENKINS_VERSION:-2.60.2} > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state && \
+    echo -n ${JENKINS_VERSION:-2.60.2} > /usr/share/jenkins/ref/jenkins.install.InstallUtil.lastExecVersion
 
 COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 
