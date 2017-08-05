@@ -87,7 +87,7 @@ ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-w
 RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
   && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c -
 
-ENV JENKINS_UC https://updates.jenkins.io
+ENV JENKINS_UC http://mirrors.jenkins-ci.org
 ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
 
 # for main web interface:
@@ -115,7 +115,7 @@ COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
-    /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+   /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 
 USER ${user}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
