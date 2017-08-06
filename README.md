@@ -1,6 +1,6 @@
-# docker-jenkins-master
+# openshift-jenkins-master
 
-Docker Jenkins Oracle Java8
+Openshift Docker Jenkins Oracle Java8
 
 ## Environemnts
 
