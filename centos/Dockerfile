@@ -11,7 +11,7 @@ LABEL version=v1.0.0 \
 RUN curl https://pkg.jenkins.io/redhat-stable/jenkins.repo -o /etc/yum.repos.d/jenkins.repo && \
     rpm --import https://pkg.jenkins.io/redhat-stable/jenkins-ci.org.key && \
     yum install -y centos-release-scl-rh && \
-    INSTALL_PKGS="rsync gettext tar zip unzip jenkins-2.60.2-1.1" && \
+    INSTALL_PKGS="wget tar zip unzip jenkins-2.60.2-1.1" && \
     yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum clean all  && \
