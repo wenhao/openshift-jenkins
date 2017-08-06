@@ -1,4 +1,4 @@
-# openshift-jenkins-master
+# openshift-jenkins
 
 Openshift Docker Jenkins Oracle Java8
 
@@ -21,7 +21,7 @@ Openshift Docker Jenkins Oracle Java8
 ## Build Image
 
 ```shell
-docker build jenkins-master:v1.0.0 .
+docker build jenkins-master:v1.0.0 ./centos
 ```
 
 ## Run
