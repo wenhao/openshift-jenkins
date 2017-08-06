@@ -1,13 +1,12 @@
-# docker-jenkins-master-oracle-jdk8
+# docker-jenkins-master
 
 Docker Jenkins Oracle Java8
 
 ## Environemnts
 
-1. Ubuntu 16.04 LTS
+1. Centos7/Ubuntu 16.04 LTS
 2. Oracle Java 1.8 latest
 3. Jenkins 2.60.2
-4. Oracle Java 8
 
 ## Features
 
@@ -22,13 +21,13 @@ Docker Jenkins Oracle Java8
 ## Build Image
 
 ```shell
-docker build jenkins-master-oracle-jdk8:v1.0.0 .
+docker build jenkins-master:v1.0.0 .
 ```
 
 ## Run
 
 ```shell
-docker run -p 8080:8080 -p 50000:50000 jenkins-master-oracle-jdk8:v1.0.0
+docker run -p 8080:8080 -p 50000:50000 jenkins-master:v1.0.0
 ```
 
 ## Troubleshooting
