@@ -7,7 +7,7 @@ FROM ubuntu:16.04
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
 LABEL version=v1.0.0
-LABEL description="Jenkins 2.X.X Master Automation."
+LABEL description="Jenkins is a continuous integration server"
 
 # this is a non-interactive automated build - avoid some warning messages
 ENV DEBIAN_FRONTEND noninteractive
@@ -30,9 +30,6 @@ RUN \
 
 # define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
-
-# set maven version
-#ARG maven_version=3.5.0
 
 # remove download archive files
 RUN apt-get clean
@@ -87,7 +84,7 @@ ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-w
 RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
   && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c -
 
-ENV JENKINS_UC https://updates.jenkins.io
+ENV JENKINS_UC http://archives.jenkins-ci.org
 ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
 
 # for main web interface:

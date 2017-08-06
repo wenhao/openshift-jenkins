@@ -70,7 +70,7 @@ doDownload() {
         # Download from the experimental update center
         url="$JENKINS_UC_EXPERIMENTAL/latest/${plugin}.hpi"
     else
-        JENKINS_UC_DOWNLOAD=${JENKINS_UC_DOWNLOAD:-"$JENKINS_UC/download"}
+        JENKINS_UC_DOWNLOAD=${JENKINS_UC_DOWNLOAD:-"$JENKINS_UC"}
         url="$JENKINS_UC_DOWNLOAD/plugins/$plugin/$version/${plugin}.hpi"
     fi
 

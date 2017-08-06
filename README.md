@@ -1,5 +1,13 @@
 # docker-jenkins-master-oracle-jdk8
+
 Docker Jenkins Oracle Java8
+
+## Environemnts
+
+1. Ubuntu 16.04 LTS
+2. Oracle Java 1.8 latest
+3. Jenkins 2.60.2
+4. Oracle Java 8
 
 ## Features
 
@@ -28,4 +36,6 @@ docker run -p 8080:8080 -p 50000:50000 jenkins-master-oracle-jdk8:v1.0.0
 Switch plugin site if failed to download jenkins plugins, available sites:
 
 1. http://mirrors.jenkins-ci.org
-2. http://archives.jenkins-ci.org/plugins/
+2. http://archives.jenkins-ci.org
+
+Also, Change `scripts/install-plugins.sh` line 73 to: `JENKINS_UC_DOWNLOAD=${JENKINS_UC_DOWNLOAD:-"$JENKINS_UC"}`
