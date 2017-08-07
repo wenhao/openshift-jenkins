@@ -4,7 +4,7 @@ Openshift Docker Jenkins Oracle Java8
 
 ## Environemnts
 
-1. Centos7/Ubuntu 16.04 LTS
+1. Centos7
 2. Oracle Java 1.8 latest
 3. Jenkins 2.60.2
 
@@ -21,7 +21,7 @@ Openshift Docker Jenkins Oracle Java8
 ## Build Image
 
 ```shell
-docker build jenkins-master:v1.0.0 ./centos
+docker build -t openshift-jenkins-master:v1.0.0 .
 ```
 
 ## Run

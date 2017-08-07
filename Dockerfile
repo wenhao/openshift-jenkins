@@ -1,38 +1,35 @@
-# Ubuntu 16.04 LTS
-# Oracle Java 1.8 latest
-# Jenkins 2.X.X
-
-FROM ubuntu:16.04
+FROM centos:centos7
 
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
-LABEL version=v1.0.0
-LABEL description="Jenkins is a continuous integration server"
+# Jenkins LTS packages from
+# https://pkg.jenkins.io/redhat-stable/
 
-# this is a non-interactive automated build - avoid some warning messages
-ENV DEBIAN_FRONTEND noninteractive
+LABEL version=v1.0.0 \
+      k8s.io.description="Jenkins is a continuous integration server" \
+      k8s.io.display-name="Jenkins 2.60.2" \
+      openshift.io.expose-services="8080:http" \
+      openshift.io.tags="jenkins,jenkins2,ci"
 
-# update dpkg repositories
-RUN apt-get update && \
-    apt-get -y install python-software-properties software-properties-common && \
-    add-apt-repository -y ppa:webupd8team/java && \
-    apt-get update && \
-    apt-get -y install wget curl zip
+RUN yum install -y centos-release-scl-rh && \
+    INSTALL_PKGS="wget tar zip unzip" && \
+    yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
+    rpm -V $INSTALL_PKGS && \
+    yum clean all  && \
+    localedef -f UTF-8 -i en_US en_US.UTF-8
 
-# install Java.
-RUN \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository -y ppa:webupd8team/java && \
-  apt-get update && \
-  apt-get install -y oracle-java8-installer && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/oracle-jdk8-installer
+ENV JAVA_VERSION 8u144
+ENV BUILD_VERSION b01
 
-# define commonly used JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/090f390dda5b47b9b721c7dfaa008135/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-8-linux-x64.rpm
 
-# remove download archive files
-RUN apt-get clean
+RUN yum -y install /tmp/jdk-8-linux-x64.rpm
+
+RUN alternatives --install /usr/bin/java jar /usr/java/latest/bin/java 20000
+RUN alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 20000
+RUN alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 20000
+
+ENV JAVA_HOME /usr/java/latest
 
 # install jenkins
 ARG user=jenkins
@@ -109,10 +106,10 @@ RUN echo -n ${JENKINS_VERSION:-2.60.2} > /usr/share/jenkins/ref/jenkins.install.
 
 COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 
-RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 
-RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
-   /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref /usr/local/bin/
 
 USER ${user}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
