@@ -18,6 +18,7 @@ RUN yum install -y centos-release-scl-rh && \
     yum clean all  && \
     localedef -f UTF-8 -i en_US en_US.UTF-8
 
+# install java 8
 ENV JAVA_VERSION 8u144
 ENV BUILD_VERSION b01
 
