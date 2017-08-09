@@ -57,7 +57,7 @@ Also, Change `scripts/install-plugins.sh` line 73 to: `JENKINS_UC_DOWNLOAD=${JEN
 8. oadm policy add-role-to-user system:registry <user_name> //授予docker push 权限
 9. oadm policy add-role-to-user admin <user_name> -n openshift
 10. oadm policy add-role-to-user system:image-builder <user_name>
-11. oc whoami t //获取token_value
+11. oc whoami -t //获取token_value
 12. docker login -u <username> -p <token_value> <registry_ip>:<port>
 13. docker pull jenkins/jenkins:lts
 14. docker tag jenkins/jenkins:lts <IP>:<PORT>/openshift/<image_name>
