@@ -11,14 +11,9 @@ LABEL version=v1.0.0 \
       openshift.io.expose-services="8080:http" \
       openshift.io.tags="jenkins,jenkins2,ci"
 
-RUN yum install -y centos-release-scl-rh && \
-    INSTALL_PKGS="wget tar zip unzip" && \
-    yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum clean all  && \
-    localedef -f UTF-8 -i en_US en_US.UTF-8
-
 # install java 8
+RUN yum install -y wget zip unzip
+
 ENV JAVA_VERSION 8u144
 ENV BUILD_VERSION b01
 
@@ -41,6 +36,8 @@ ARG gid=1000
 ARG http_port=8080
 ARG agent_port=50000
 
+ENV JENKINS_ADMIN_USERNAME admin
+ENV JENKINS_ADMIN_PASSWORD admin
 ENV JENKINS_HOME /var/jenkins_home
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 
