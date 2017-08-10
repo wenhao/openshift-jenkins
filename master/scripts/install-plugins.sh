@@ -1,10 +1,5 @@
 #!/bin/bash -eu
 
-# Resolve dependencies and download plugins given on the command line
-#
-# FROM jenkins
-# RUN install-plugins.sh docker-slaves github-branch-source
-
 set -o pipefail
 
 REF_DIR=${REF:-/usr/share/jenkins/ref/plugins}
@@ -29,8 +24,6 @@ download() {
 
     if [[ $ignoreLockFile ]] || mkdir "$lock" &>/dev/null; then
         if ! doDownload "$plugin" "$version"; then
-            # some plugin don't follow the rules about artifact ID
-            # typically: docker-plugin
             originalPlugin="$plugin"
             plugin="${plugin}-plugin"
             if ! doDownload "$plugin" "$version"; then
