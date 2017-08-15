@@ -69,7 +69,6 @@ strategy.add(hudson.model.Item.WORKSPACE, "anonymous")
 
 // Run Permissions
 strategy.add(hudson.model.Run.DELETE, "admin")
-strategy.add(hudson.model.Run.REPLAY, "admin")
 strategy.add(hudson.model.Run.UPDATE, "admin")
 
 // Admin View Permissions
