@@ -2,6 +2,7 @@ kind: Template
 apiVersion: v1
 labels:
   tempalte: "jenkins-master"
+  app: "jenkins-master"
 metadata:
   name: "jenkins-master"
   annotations:
@@ -18,14 +19,14 @@ objects:
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: "${JENKINS_SERVICE_NAME}"
+      name: "${SERVICE_NAME}"
       labels:
-        app: "${JENKINS_SERVICE_NAME}"
+        app: "${SERVICE_NAME}"
     spec:
       replicas: 1
       selector:
-        app: "${JENKINS_SERVICE_NAME}"
-        deploymentconfig: "${JENKINS_SERVICE_NAME}"
+        app: "${SERVICE_NAME}"
+        deploymentconfig: "${SERVICE_NAME}"
       strategy:
         type: "Recreate"
       triggers:
@@ -36,16 +37,16 @@ objects:
               - jenkins-master
             from:
               kind: "ImageStreamTag"
-              name: "${JENKINS_IMAGE_STREAM_TAG}"
+              name: "${IMAGE_STREAM_TAG}"
               namespace: "${NAMESPACE}"
         - type: "ConfigChange"
       template:
         metadata:
           labels:
-            app: "${JENKINS_SERVICE_NAME}"
-            deploymentconfig: "${JENKINS_SERVICE_NAME}"
+            app: "${SERVICE_NAME}"
+            deploymentconfig: "${SERVICE_NAME}"
         spec:
-          serviceAccountName: "${JENKINS_SERVICE_NAME}"
+          serviceAccountName: "${SERVICE_NAME}"
           containers:
             - name: "jenkins-master"
               image: "jenkins-master"
@@ -70,32 +71,32 @@ objects:
                   port: 8080
               env:
                 - name: "JENKINS_ADMIN_USERNAME"
-                  value: "{JENKINS_ADMIN_USERNAME}"
+                  value: "{USERNAME}"
                 - name: "JENKINS_ADMIN_PASSWORD"
-                  value: "{JENKINS_ADMIN_PASSWORD}"
+                  value: "{PASSWORD}"
                 - name: "JENKINS_HOME"
                   value: "${JENKINS_HOME}"
               resources:
                 limits:
                   memory: "${MEMORY_LIMIT}"
               volumeMounts:
-                - name: "${JENKINS_SERVICE_NAME}-data"
+                - name: "${SERVICE_NAME}-data"
                   mountPath: "${JENKINS_HOME}"
               terminationMessagePath: "/dev/termination-log"
               securityContext:
                 privileged: false
           volumes:
-            - name: "${JENKINS_SERVICE_NAME}-data"
+            - name: "${SERVICE_NAME}-data"
               persistentVolumeClaim:
-                claimName: "${JENKINS_SERVICE_NAME}"
+                claimName: "${SERVICE_NAME}"
           restartPolicy: "Always"
           dnsPolicy: "ClusterFirst"
   - kind: Service
     apiVersion: v1
     metadata:
-      name: "${JENKINS_SERVICE_NAME}"
+      name: "${SERVICE_NAME}"
       labels:
-        app: "${JENKINS_SERVICE_NAME}"
+        app: "${SERVICE_NAME}"
       annotations:
         service.openshift.io/infrastructure: "true"
     spec:
@@ -109,25 +110,25 @@ objects:
           port: 50000
           targetPort: 50000
       selector:
-        deploymentconfig: "${JENKINS_SERVICE_NAME}"
+        deploymentconfig: "${SERVICE_NAME}"
       type: "ClusterIP"
       sessionAffinity: "None"
   - kind: Route
     apiVersion: v1
     metadata:
-      name: "${JENKINS_SERVICE_NAME}"
+      name: "${SERVICE_NAME}"
       annotations:
         template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
     spec:
       to:
         kind: Service
-        name: "${JENKINS_SERVICE_NAME}"
+        name: "${SERVICE_NAME}"
       port:
         targetPort: "jenkins-master-web"
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
-      name: "${JENKINS_SERVICE_NAME}"
+      name: "${SERVICE_NAME}"
     spec:
       accessModes:
         - ReadWriteOnce
@@ -135,17 +136,17 @@ objects:
         requests:
           storage: "${VOLUME_CAPACITY}"
 parameters:
-  - name: "JENKINS_SERVICE_NAME"
+  - name: "SERVICE_NAME"
     displayName: "Jenkins Service Name"
     description: "The unqiue name of the OpenShift Service exposed for the Jenkins container."
     value: "jenkins"
     required: true
-  - name: "JENKINS_ADMIN_USERNAME"
+  - name: "USERNAME"
     displayName: "Jenkins Master Administrator Username"
     description: "Username of the Jenkins Master Administrator."
     value: "admin"
     required: true
-  - name: "JENKINS_ADMIN_PASSWORD"
+  - name: "PASSWORD"
     displayName: "Jenkins Master Administrator Password"
     description: "Password of the Jenkins Master Administrator."
     value: "admin"
@@ -160,7 +161,7 @@ parameters:
     description: "The OpenShift Namespace where the Jenkins ImageStream resides."
     value: "openshift"
     required: true
-  - name: "JENKINS_IMAGE_STREAM_TAG"
+  - name: "IMAGE_STREAM_TAG"
     displayName: "Jenkins ImageStreamTag"
     description: "Name of the ImageStreamTag to be used for the Jenkins image."
     value: "jenkins-master:v1.0.0"

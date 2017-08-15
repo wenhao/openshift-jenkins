@@ -26,50 +26,62 @@ hudsonRealm.createAccount(adminUsername, adminPassword)
 instance.setSecurityRealm(hudsonRealm)
 
 def strategy = new GlobalMatrixAuthorizationStrategy()
-strategy.add(hudson.model.Hudson.Administer, "admin")
 
-strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.Create, "admin")
-strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.Delete, "admin")
-strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains, "admin")
-strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.Update, "admin")
-strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.View, "admin")
-strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.View, "anonymous")
+// Credential Permissions
+strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.CREATE, "admin")
+strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.DELETE, "admin")
+strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.MANAGE_DOMAINS, "admin")
+strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.UPDATE, "admin")
+strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.VIEW, "admin")
+strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.VIEW, "anonymous")
 
-strategy.add(hudson.model.Computer.Build, "admin")
-strategy.add(hudson.model.Computer.Configure, "admin")
-strategy.add(hudson.model.Computer.Connect, "admin")
-strategy.add(hudson.model.Computer.Connect, "anonymous")
-strategy.add(hudson.model.Computer.Create, "anonymous")
-strategy.add(hudson.model.Computer.Create, "admin")
-strategy.add(hudson.model.Computer.Delete, "admin")
-strategy.add(hudson.model.Computer.Disconnect, "admin")
-strategy.add(hudson.model.Computer.Provision, "admin")
-strategy.add(hudson.model.Hudson.Administer, "admin")
-strategy.add(hudson.model.Hudson.Read, "admin")
-strategy.add(hudson.model.Hudson.Read, "anonymous")
-strategy.add(hudson.model.Item.Build, "admin")
-strategy.add(hudson.model.Item.Cancel, "admin")
-strategy.add(hudson.model.Item.Configure, "admin")
-strategy.add(hudson.model.Item.Create, "admin")
-strategy.add(hudson.model.Item.Delete, "admin")
-strategy.add(hudson.model.Item.Discover, "admin")
+// Admin Slave Permissions
+strategy.add(hudson.model.Computer.BUILD, "admin")
+strategy.add(hudson.model.Computer.CONFIGURE, "admin")
+strategy.add(hudson.model.Computer.CONNECT, "admin")
+strategy.add(hudson.model.Computer.CREATE, "admin")
+strategy.add(hudson.model.Computer.DELETE, "admin")
+strategy.add(hudson.model.Computer.DISCONNECT, "admin")
+// Anonymous Slave Permissions
+strategy.add(hudson.model.Computer.CONNECT, "anonymous")
+strategy.add(hudson.model.Computer.CREATE, "anonymous")
+
+// Overall Permissions
+strategy.add(hudson.model.Hudson.ADMINISTER, "admin")
+strategy.add(hudson.PluginManager.CONFIGURE_UPDATECENTER,'anonymous')
+strategy.add(hudson.model.Hudson.READ, "admin")
+strategy.add(hudson.model.Hudson.READ, "anonymous")
+strategy.add(hudson.model.Hudson.RUN_SCRIPTS,'anonymous')
+strategy.add(hudson.PluginManager.UPLOAD_PLUGINS,'anonymous')
+
+// Admin Job Permissions
+strategy.add(hudson.model.Item.BUILD, "admin")
+strategy.add(hudson.model.Item.CANCEL, "admin")
+strategy.add(hudson.model.Item.CONFIGURE, "admin")
+strategy.add(hudson.model.Item.CREATE,'admin')
+strategy.add(hudson.model.Item.DELETE, "admin")
+strategy.add(hudson.model.Item.DISCOVER, "admin")
+strategy.add(hudson.model.Item.READ,'admin')
+strategy.add(hudson.model.Item.WORKSPACE,'admin')
 strategy.add(hudson.model.Item.Move, "admin")
-strategy.add(hudson.model.Item.Read, "admin")
-strategy.add(hudson.model.Item.Read, "anonymous")
-strategy.add(hudson.model.Item.Workspace, "admin")
-strategy.add(hudson.model.Run.Delete, "admin")
-strategy.add(hudson.model.Run.Replay, "admin")
-strategy.add(hudson.model.Run.Update, "admin")
-strategy.add(hudson.model.View.Configure, "admin")
-strategy.add(hudson.model.View.Create, "admin")
-strategy.add(hudson.model.View.Delete, "admin")
-strategy.add(hudson.model.View.Read, "admin")
-strategy.add(hudson.model.View.Read, "anonymous")
-strategy.add(hudson.scm.SCM.Tag, "admin")
-strategy.add(jenkins.metrics.api.Metrics.HealthCheck, "admin")
-strategy.add(jenkins.metrics.api.Metrics.ThreadDump, "admin")
-strategy.add(jenkins.metrics.api.Metrics.View, "admin")
-strategy.add(jenkins.metrics.api.Metrics.View, "anonymous")
+// anonymous Job Permissions
+strategy.add(hudson.model.Item.READ, "anonymous")
+strategy.add(hudson.model.Item.WORKSPACE, "anonymous")
+
+// Run Permissions
+strategy.add(hudson.model.Run.DELETE, "admin")
+strategy.add(hudson.model.Run.REPLAY, "admin")
+strategy.add(hudson.model.Run.UPDATE, "admin")
+
+// Admin View Permissions
+strategy.add(hudson.model.View.CONFIGURE, "admin")
+strategy.add(hudson.model.View.CREATE, "admin")
+strategy.add(hudson.model.View.DELETE, "admin")
+strategy.add(hudson.model.View.READ, "admin")
+
+// Anonymous View Permissions
+strategy.add(hudson.model.View.READ, "anonymous")
+
 instance.setAuthorizationStrategy(strategy)
 
 // set executors
