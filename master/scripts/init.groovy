@@ -46,13 +46,12 @@ strategy.add(hudson.model.Computer.DISCONNECT, "admin")
 strategy.add(hudson.model.Computer.CONNECT, "anonymous")
 strategy.add(hudson.model.Computer.CREATE, "anonymous")
 
-// Overall Permissions
+// Admin Overall Permissions
 strategy.add(hudson.model.Hudson.ADMINISTER, "admin")
-strategy.add(hudson.PluginManager.CONFIGURE_UPDATECENTER,'anonymous')
 strategy.add(hudson.model.Hudson.READ, "admin")
+
+// Anonymous Overall Permissions
 strategy.add(hudson.model.Hudson.READ, "anonymous")
-strategy.add(hudson.model.Hudson.RUN_SCRIPTS,'anonymous')
-strategy.add(hudson.PluginManager.UPLOAD_PLUGINS,'anonymous')
 
 // Admin Job Permissions
 strategy.add(hudson.model.Item.BUILD, "admin")
@@ -82,6 +81,15 @@ strategy.add(hudson.model.View.READ, "admin")
 
 // Anonymous View Permissions
 strategy.add(hudson.model.View.READ, "anonymous")
+
+// SCM Permissions
+strategy.add(hudson.scm.SCM.TAG, "admin")
+
+// Metrics Permissions
+strategy.add(jenkins.metrics.api.Metrics.HEALTH_CHECK, "admin")
+strategy.add(jenkins.metrics.api.Metrics.THREAD_DUMP, "admin")
+strategy.add(jenkins.metrics.api.Metrics.VIEW, "admin")
+strategy.add(jenkins.metrics.api.Metrics.VIEW, "anonymous")
 
 instance.setAuthorizationStrategy(strategy)
 
