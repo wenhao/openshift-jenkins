@@ -1,0 +1,164 @@
+kind: Template
+apiVersion: v1
+labels:
+  tempalte: "jenkins-master"
+metadata:
+  name: "jenkins-master"
+  annotations:
+    openshift.io/display-name: "Jenkins Master"
+    description: "Jenkins service, with persistent storage.\n\nNOTE: You must have persistent volumes available in your cluster to use this template."
+    iconClass: "icon-jenkins"
+    tags: "instant-app,jenkins-master,jenkins"
+    template.openshift.io/long-description: "This template deploys a Jenkins server capable of managing OpenShift Pipeline builds and supporting OpenShift-based oauth login."
+    template.openshift.io/provider-display-name: "Wen Hao."
+    template.openshift.io/documentation-url: "https://github.com/wenhao/openshift-jenkins"
+    template.openshift.io/support-url: "https://github.com/wenhao/openshift-jenkins"
+message: "A Jenkins service has been created in your project.  Log into Jenkins with defualt admin account."
+objects:
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: "${JENKINS_SERVICE_NAME}"
+      labels:
+        app: "${JENKINS_SERVICE_NAME}"
+    spec:
+      replicas: 1
+      selector:
+        app: "${JENKINS_SERVICE_NAME}"
+        deploymentconfig: "${JENKINS_SERVICE_NAME}"
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - jenkins-master
+            from:
+              kind: "ImageStreamTag"
+              name: "${JENKINS_IMAGE_STREAM_TAG}"
+              namespace: "${NAMESPACE}"
+        - type: "ConfigChange"
+      template:
+        metadata:
+          labels:
+            app: "${JENKINS_SERVICE_NAME}"
+            deploymentconfig: "${JENKINS_SERVICE_NAME}"
+        spec:
+          serviceAccountName: "${JENKINS_SERVICE_NAME}"
+          containers:
+            - name: "jenkins-master"
+              image: "jenkins-master"
+              imagePullPolicy: "IfNotPresent"
+              ports:
+                - containerPort: 8080
+                  protocol: "TCP"
+                - containerPort: 50000
+                  protocol: "TCP"
+              env:
+                - name: "JENKINS_ADMIN_USERNAME"
+                  value: "{JENKINS_ADMIN_USERNAME}"
+                - name: "JENKINS_ADMIN_PASSWORD"
+                  value: "{JENKINS_ADMIN_PASSWORD}"
+                - name: "JENKINS_HOME"
+                  value: "${JENKINS_HOME}"
+              resources:
+                limits:
+                  memory: "${MEMORY_LIMIT}"
+              volumeMounts:
+                - name: "${JENKINS_SERVICE_NAME}-data"
+                  mountPath: "${JENKINS_HOME}"
+              terminationMessagePath: "/dev/termination-log"
+              securityContext:
+                privileged: false
+          volumes:
+            - name: "${JENKINS_SERVICE_NAME}-data"
+              persistentVolumeClaim:
+                claimName: "${JENKINS_SERVICE_NAME}"
+          restartPolicy: "Always"
+          dnsPolicy: "ClusterFirst"
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: "${JENKINS_SERVICE_NAME}"
+      labels:
+        app: "${JENKINS_SERVICE_NAME}"
+      annotations:
+        service.openshift.io/infrastructure: "true"
+    spec:
+      ports:
+        - name: "jenkins-master-web"
+          protocol: "TCP"
+          port: 8080
+          targetPort: 8080
+        - name: "jenkins-slave"
+          protocol: "TCP"
+          port: 50000
+          targetPort: 50000
+      selector:
+        deploymentconfig: "${JENKINS_SERVICE_NAME}"
+      type: "ClusterIP"
+      sessionAffinity: "None"
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: "${JENKINS_SERVICE_NAME}"
+      annotations:
+        template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
+    spec:
+      to:
+        kind: Service
+        name: "${JENKINS_SERVICE_NAME}"
+      port:
+        targetPort: "jenkins-master-web"
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: "${JENKINS_SERVICE_NAME}"
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: "${VOLUME_CAPACITY}"
+parameters:
+  - name: "JENKINS_SERVICE_NAME"
+    displayName: "Jenkins Service Name"
+    description: "The unqiue name of the OpenShift Service exposed for the Jenkins container."
+    value: "jenkins"
+    required: true
+  - name: "JENKINS_ADMIN_USERNAME"
+    displayName: "Jenkins Master Administrator Username"
+    description: "Username of the Jenkins Master Administrator."
+    value: "admin"
+    required: true
+  - name: "JENKINS_ADMIN_PASSWORD"
+    displayName: "Jenkins Master Administrator Password"
+    description: "Password of the Jenkins Master Administrator."
+    value: "admin"
+    required: true
+  - name: "JENKINS_HOME"
+    displayName: "Jenkins Home Directory"
+    description: "Directory of the Jenkins Home."
+    value: "/var/jenkins_home"
+    required: true
+  - name: "NAMESPACE"
+    displayName: "Jenkins ImageStream Namespace"
+    description: "The OpenShift Namespace where the Jenkins ImageStream resides."
+    value: "openshift"
+    required: true
+  - name: "JENKINS_IMAGE_STREAM_TAG"
+    displayName: "Jenkins ImageStreamTag"
+    description: "Name of the ImageStreamTag to be used for the Jenkins image."
+    value: "jenkins-master:v1.0.0"
+    required: true
+  - name: "MEMORY_LIMIT"
+    displayName: "Memory Limit"
+    description: "Maximum amount of memory the container can use."
+    value: "512Mi"
+    required: true
+  - name: "VOLUME_CAPACITY"
+    displayName: "Volume Capacity"
+    description: "Volume space available for data, e.g. 512Mi, 2Gi."
+    value: "1Gi"
+    required: true
