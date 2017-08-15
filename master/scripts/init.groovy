@@ -63,7 +63,6 @@ strategy.add(hudson.model.Item.DELETE, "admin")
 strategy.add(hudson.model.Item.DISCOVER, "admin")
 strategy.add(hudson.model.Item.READ,'admin')
 strategy.add(hudson.model.Item.WORKSPACE,'admin')
-strategy.add(hudson.model.Item.Move, "admin")
 // anonymous Job Permissions
 strategy.add(hudson.model.Item.READ, "anonymous")
 strategy.add(hudson.model.Item.WORKSPACE, "anonymous")
