@@ -10,7 +10,7 @@ metadata:
     description: "Jenkins service, with persistent storage.\n\nNOTE: You must have persistent volumes available in your cluster to use this template."
     iconClass: "icon-jenkins"
     tags: "instant-app,jenkins-master,jenkins"
-    template.openshift.io/long-description: "This template deploys a Jenkins server capable of managing OpenShift Pipeline builds and supporting OpenShift-based oauth login."
+    template.openshift.io/long-description: "This template deploys a Jenkins server."
     template.openshift.io/provider-display-name: "Wen Hao."
     template.openshift.io/documentation-url: "https://github.com/wenhao/openshift-jenkins"
     template.openshift.io/support-url: "https://github.com/wenhao/openshift-jenkins"
@@ -19,14 +19,14 @@ objects:
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: "${SERVICE_NAME}"
+      name: "${JENKINS_NAME}"
       labels:
-        app: "${SERVICE_NAME}"
+        app: "${JENKINS_NAME}"
     spec:
       replicas: 1
       selector:
-        app: "${SERVICE_NAME}"
-        deploymentconfig: "${SERVICE_NAME}"
+        app: "${JENKINS_NAME}"
+        deploymentconfig: "${JENKINS_NAME}"
       strategy:
         type: "Recreate"
       triggers:
@@ -43,8 +43,8 @@ objects:
       template:
         metadata:
           labels:
-            app: "${SERVICE_NAME}"
-            deploymentconfig: "${SERVICE_NAME}"
+            app: "${JENKINS_NAME}"
+            deploymentconfig: "${JENKINS_NAME}"
         spec:
           containers:
             - name: "jenkins-master"
@@ -79,23 +79,23 @@ objects:
                 limits:
                   memory: "${MEMORY_LIMIT}"
               volumeMounts:
-                - name: "${SERVICE_NAME}-data"
+                - name: "${JENKINS_NAME}-data"
                   mountPath: "${JENKINS_HOME}"
               terminationMessagePath: "/dev/termination-log"
               securityContext:
                 privileged: false
           volumes:
-            - name: "${SERVICE_NAME}-data"
+            - name: "${JENKINS_NAME}-data"
               persistentVolumeClaim:
-                claimName: "${SERVICE_NAME}"
+                claimName: "${JENKINS_NAME}"
           restartPolicy: "Always"
           dnsPolicy: "ClusterFirst"
   - kind: Service
     apiVersion: v1
     metadata:
-      name: "${SERVICE_NAME}"
+      name: "${JENKINS_NAME}"
       labels:
-        app: "${SERVICE_NAME}"
+        app: "${JENKINS_NAME}"
       annotations:
         service.openshift.io/infrastructure: "true"
     spec:
@@ -109,25 +109,25 @@ objects:
           port: 50000
           targetPort: 50000
       selector:
-        deploymentconfig: "${SERVICE_NAME}"
+        deploymentconfig: "${JENKINS_NAME}"
       type: "ClusterIP"
       sessionAffinity: "None"
   - kind: Route
     apiVersion: v1
     metadata:
-      name: "${SERVICE_NAME}"
+      name: "${JENKINS_NAME}"
       annotations:
         template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
     spec:
       to:
         kind: Service
-        name: "${SERVICE_NAME}"
+        name: "${JENKINS_NAME}"
       port:
         targetPort: "jenkins-master-web"
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
-      name: "${SERVICE_NAME}"
+      name: "${JENKINS_NAME}"
     spec:
       accessModes:
         - ReadWriteOnce
@@ -135,9 +135,9 @@ objects:
         requests:
           storage: "${VOLUME_CAPACITY}"
 parameters:
-  - name: "SERVICE_NAME"
-    displayName: "Jenkins Service Name"
-    description: "The unqiue name of the OpenShift Service exposed for the Jenkins container."
+  - name: "JENKINS_NAME"
+    displayName: "Jenkins Master Server Name"
+    description: "The unqiue name of the Jenkins Service And Route."
     value: "jenkins"
     required: true
   - name: "USERNAME"

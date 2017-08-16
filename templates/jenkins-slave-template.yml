@@ -1,0 +1,120 @@
+kind: Template
+apiVersion: v1
+labels:
+  tempalte: "jenkins-jnlp-slave"
+  app: "jenkins-jnlp-slave"
+metadata:
+  name: "jenkins-jnlp-slave"
+  annotations:
+    openshift.io/display-name: "Jenkins Jnlp Slave"
+    description: "Jenkins slave, with persistent storage.\n\nNOTE: You must have persistent volumes available in your cluster to use this template."
+    iconClass: "icon-jenkins"
+    tags: "instant-app,jenkins-jnlp-slave,jenkins,jenkins-slave,slave"
+    template.openshift.io/long-description: "This template deploys a Jenkins slave."
+    template.openshift.io/provider-display-name: "Wen Hao."
+    template.openshift.io/documentation-url: "https://github.com/wenhao/openshift-jenkins"
+    template.openshift.io/support-url: "https://github.com/wenhao/openshift-jenkins"
+message: "A Jenkins slave has been created in your project.  Log into Jenkins with defualt admin account."
+objects:
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: "${SLAVE_NAME}"
+      labels:
+        app: "${SLAVE_NAME}"
+    spec:
+      replicas: 1
+      selector:
+        app: "${SLAVE_NAME}"
+        deploymentconfig: "${SLAVE_NAME}"
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - jenkins-jnlp-slave
+            from:
+              kind: "ImageStreamTag"
+              name: "${IMAGE_STREAM_TAG}"
+              namespace: "${NAMESPACE}"
+        - type: "ConfigChange"
+      template:
+        metadata:
+          labels:
+            app: "${SLAVE_NAME}"
+            deploymentconfig: "${SLAVE_NAME}"
+        spec:
+          containers:
+            - name: "jenkins-jnlp-slave"
+              image: "jenkins-jnlp-slave"
+              imagePullPolicy: "IfNotPresent"
+              env:
+                - name: "JENKINS_URL"
+                  value: "http://${JENKINS_URL}:8080"
+                - name: "SLAVE_NAME"
+                  value: "${SLAVE_NAME}"
+                - name: "AGENT_WORKDIR"
+                  value: "${SLAEV_WORKDIR}"
+              resources:
+                limits:
+                  memory: "${MEMORY_LIMIT}"
+              volumeMounts:
+                - name: "${SLAVE_NAME}-data"
+                  mountPath: "${SLAE_WORKDIR}"
+              terminationMessagePath: "/dev/termination-log"
+              securityContext:
+                privileged: false
+          volumes:
+            - name: "${SLAVE_NAME}-data"
+              persistentVolumeClaim:
+                claimName: "${SLAVE_NAME}"
+          restartPolicy: "Always"
+          dnsPolicy: "ClusterFirst"
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: "${SLAVE_NAME}"
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: "${VOLUME_CAPACITY}"
+parameters:
+  - name: "SLAVE_NAME"
+    displayName: "Jenkins Master Server Name"
+    description: "The unqiue name of the Jenkins Slave."
+    value: "jenkins-slave"
+    required: true
+  - name: "JENKINS_URL"
+    displayName: "Jenkins Master URL"
+    description: "URL of the Internal Jenkins Master Service IP."
+    value: "172.30.226.156"
+    required: true
+  - name: "SLAE_WORKDIR"
+    displayName: "Jenkins Slave Home Directory"
+    description: "Directory of the Jenkins Slave."
+    value: "/home/jenkins/agent"
+    required: true
+  - name: "NAMESPACE"
+    displayName: "Jenkins ImageStream Namespace"
+    description: "The OpenShift Namespace where the Jenkins ImageStream resides."
+    value: "openshift"
+    required: true
+  - name: "IMAGE_STREAM_TAG"
+    displayName: "Jenkins ImageStreamTag"
+    description: "Name of the ImageStreamTag to be used for the Jenkins image."
+    value: "jenkins-jnlp-slave:v1.0.0"
+    required: true
+  - name: "MEMORY_LIMIT"
+    displayName: "Memory Limit"
+    description: "Maximum amount of memory the container can use."
+    value: "512Mi"
+    required: true
+  - name: "VOLUME_CAPACITY"
+    displayName: "Volume Capacity"
+    description: "Volume space available for data, e.g. 512Mi, 2Gi."
+    value: "1Gi"
+    required: true
