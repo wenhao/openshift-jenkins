@@ -71,9 +71,9 @@ objects:
                   port: 8080
               env:
                 - name: "JENKINS_ADMIN_USERNAME"
-                  value: "{USERNAME}"
+                  value: "${USERNAME}"
                 - name: "JENKINS_ADMIN_PASSWORD"
-                  value: "{PASSWORD}"
+                  value: "${PASSWORD}"
                 - name: "JENKINS_HOME"
                   value: "${JENKINS_HOME}"
               resources:
