@@ -46,7 +46,6 @@ objects:
             app: "${SERVICE_NAME}"
             deploymentconfig: "${SERVICE_NAME}"
         spec:
-          serviceAccountName: "${SERVICE_NAME}"
           containers:
             - name: "jenkins-master"
               image: "jenkins-master"
