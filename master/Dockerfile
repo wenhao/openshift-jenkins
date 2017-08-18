@@ -12,7 +12,7 @@ LABEL version=v1.0.0 \
       openshift.io.tags="jenkins,jenkins2,ci"
 
 # install java 8
-RUN yum install -y wget zip unzip
+RUN yum install -y git wget zip unzip
 
 ENV JAVA_VERSION 8u144
 ENV BUILD_VERSION b01
