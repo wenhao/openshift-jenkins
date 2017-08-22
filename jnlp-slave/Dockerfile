@@ -9,14 +9,12 @@ LABEL version=v1.0.0 \
 
 # install java 8
 RUN yum install -y wget
-ENV JAVA_VERSION 8u144
-ENV BUILD_VERSION b01
+ENV JAVA_VERSION=8u144 \
+    BUILD_VERSION=b01
 
-RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/090f390dda5b47b9b721c7dfaa008135/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-8-linux-x64.rpm
-
-RUN yum -y install /tmp/jdk-8-linux-x64.rpm
-
-RUN alternatives --install /usr/bin/java java /usr/java/latest/bin/java 20000 && \
+RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/090f390dda5b47b9b721c7dfaa008135/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-8-linux-x64.rpm && \
+    yum -y install /tmp/jdk-8-linux-x64.rpm && \
+    alternatives --install /usr/bin/java java /usr/java/latest/bin/java 20000 && \
     alternatives --install /usr/bin/jar jar /usr/java/latest/bin/jar 20000 && \
     alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 20000 && \
     alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 20000

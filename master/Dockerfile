@@ -15,7 +15,7 @@ LABEL version=v1.0.0 \
 RUN yum install -y git wget zip unzip
 
 ENV JAVA_VERSION=8u144 \
-    BUILD_VERSION b01
+    BUILD_VERSION=b01
 
 RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/090f390dda5b47b9b721c7dfaa008135/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-8-linux-x64.rpm && \
     yum -y install /tmp/jdk-8-linux-x64.rpm && \
