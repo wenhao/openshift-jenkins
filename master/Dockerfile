@@ -33,7 +33,7 @@ ARG user=jenkins \
     gid=1000 \
     http_port=8080 \
     agent_port=50000 \
-    JENKINS_VERSION
+    JENKINS_VERSION=2.60.2
 
 ENV HOME=/var/jenkins_home \
     JENKINS_HOME=/var/jenkins_home \
