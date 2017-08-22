@@ -27,13 +27,13 @@ RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=acc
 ENV JAVA_HOME /usr/java/latest
 
 # install jenkins
-ARG user=jenkins \
-    group=jenkins \
-    uid=1000 \
-    gid=1000 \
-    http_port=8080 \
-    agent_port=50000 \
-    JENKINS_VERSION=2.60.2
+ARG user=jenkins
+ARG group=jenkins
+ARG uid=1000
+ARG gid=1000
+ARG http_port=8080
+ARG agent_port=50000
+ARG JENKINS_VERSION=2.60.2
 
 ENV HOME=/var/jenkins_home \
     JENKINS_HOME=/var/jenkins_home \
