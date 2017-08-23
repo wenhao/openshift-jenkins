@@ -37,6 +37,7 @@ ARG JENKINS_VERSION=2.60.2
 
 ENV HOME=/var/jenkins_home \
     JENKINS_HOME=/var/jenkins_home \
+    user.home=/var/jenkins_home/jenkins \
     JENKINS_ADMIN_USERNAME=admin \
     JENKINS_ADMIN_PASSWORD=admin \
     JENKINS_SLAVE_AGENT_PORT=${agent_port} \
@@ -55,7 +56,8 @@ VOLUME /var/jenkins_home
 # `/usr/share/jenkins/ref/` contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
 # or config file with your custom jenkins Docker image.
-RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
+RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d && \
+    mkdir -p /var/jenkins_home/jenkins
 
 ENV TINI_VERSION v0.14.0
 ENV TINI_SHA 6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
@@ -104,8 +106,7 @@ COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
-    chown -R ${user} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin && \
-    chmod o+w $JENKINS_HOME
+    chown -R ${user} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin
 
 USER ${user}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
