@@ -76,3 +76,13 @@ Also, Change `scripts/install-plugins.sh` line 73 to: `JENKINS_UC_DOWNLOAD=${JEN
 
 1. https://<openshift_IP>:<PORT>/oauth/token/request
 2. Authorization: Bearer <token>
+
+## Openshift任意用户运行
+
+```shell
+oc edit scc restricted
+```
+
+runAsUser.Type to RunAsAny.
+
+Ensure allowPrivilegedContainer is set to false.
