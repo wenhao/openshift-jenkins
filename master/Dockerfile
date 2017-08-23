@@ -104,7 +104,8 @@ COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
-    chown -R ${user} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin
+    chown -R ${user} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin && \
+    chmod o+w $JENKINS_HOME
 
 USER ${user}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
