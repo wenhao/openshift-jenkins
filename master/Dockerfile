@@ -113,5 +113,9 @@ RUN yum install -y yum-utils device-mapper-persistent-data lvm2 && \
     yum makecache fast && \
     yum install -y docker-ce
 
+# install dind wrapper.
+ADD ./wrapdocker /usr/local/bin/wrapdocker
+RUN chmod +x /usr/local/bin/wrapdocker
+
 USER ${user}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
