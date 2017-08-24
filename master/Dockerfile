@@ -117,7 +117,7 @@ RUN yum install -y yum-utils device-mapper-persistent-data lvm2 && \
     yum install -y docker-ce
 
 # install dind wrapper.
-COPY .scripts/wrapdocker /usr/local/bin/wrapdocker
+COPY ./scripts/wrapdocker /usr/local/bin/wrapdocker
 RUN chmod +x /usr/local/bin/wrapdocker
 
 USER ${user}
