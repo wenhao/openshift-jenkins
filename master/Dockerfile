@@ -111,8 +111,7 @@ RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
 RUN yum install -y yum-utils device-mapper-persistent-data lvm2 && \
     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
     yum makecache fast && \
-    yum install -y docker-ce && \
-    systemctl start docker
+    yum install -y docker-ce
 
 USER ${user}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
