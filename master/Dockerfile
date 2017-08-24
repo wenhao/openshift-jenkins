@@ -108,13 +108,17 @@ RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
     touch "${COPY_REFERENCE_FILE_LOG}"
 
 # install docker
+RUN groupadd docker && \
+    usermod -aG docker ${user}
+
 RUN yum install -y yum-utils device-mapper-persistent-data lvm2 && \
     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
     yum makecache fast && \
-    yum install -y docker-ce
+    yum install -y docker-ce && \
+    sudo systemctl start docker
 
 # install dind wrapper.
-ADD ./wrapdocker /usr/local/bin/wrapdocker
+COPY .scripts/wrapdocker /usr/local/bin/wrapdocker
 RUN chmod +x /usr/local/bin/wrapdocker
 
 USER ${user}
