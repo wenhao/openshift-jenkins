@@ -107,18 +107,5 @@ RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
     chown -R ${user} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin && \
     touch "${COPY_REFERENCE_FILE_LOG}"
 
-# install docker
-RUN groupadd docker && \
-    usermod -aG docker ${user}
-
-RUN yum install -y yum-utils device-mapper-persistent-data lvm2 && \
-    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
-    yum makecache fast && \
-    yum install -y docker-ce
-
-# install dind wrapper.
-COPY ./scripts/wrapdocker /usr/local/bin/wrapdocker
-RUN chmod +x /usr/local/bin/wrapdocker
-
 USER ${user}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
