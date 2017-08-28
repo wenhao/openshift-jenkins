@@ -15,10 +15,6 @@ LABEL version=v1.0.0 \
 RUN yum install -y git wget zip unzip java-1.8.0-openjdk
 
 # install jenkins
-ARG user=jenkins
-ARG group=jenkins
-ARG uid=1000
-ARG gid=1000
 ARG http_port=8080
 ARG agent_port=50000
 ARG JENKINS_VERSION=2.60.2
@@ -29,12 +25,6 @@ ENV HOME=/var/jenkins_home \
     JENKINS_ADMIN_PASSWORD=admin \
     JENKINS_SLAVE_AGENT_PORT=${agent_port} \
     JENKINS_VERSION=${JENKINS_VERSION:-2.60.2}
-
-# Jenkins is run with user `jenkins`, uid = 1000
-# If you bind mount a volume from the host or a data container,
-# ensure you use the same uid
-RUN groupadd -g ${gid} ${group} \
-    && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
 # `/usr/share/jenkins/ref/` contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
@@ -88,8 +78,7 @@ COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
-    touch "${COPY_REFERENCE_FILE_LOG}" && \
-    chown -R ${user}:${group} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin
+    touch "${COPY_REFERENCE_FILE_LOG}"
 
 # install openshift client
 ARG OPENSHIFT_VERSION=v3.6.0
@@ -102,5 +91,4 @@ RUN curl -fsSL https://github.com/openshift/origin/releases/download/${OPENSHIFT
     cp openshift-origin-client-tools-*/oc /usr/local/bin/ && \
     oc version
 
-USER ${uid}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
