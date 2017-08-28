@@ -36,10 +36,6 @@ ENV HOME=/var/jenkins_home \
 RUN groupadd -g ${gid} ${group} \
     && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
-# Jenkins home directory is a volume, so configuration and build history
-# can be persisted and survive image upgrades
-VOLUME /var/jenkins_home
-
 # `/usr/share/jenkins/ref/` contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
 # or config file with your custom jenkins Docker image.
@@ -92,7 +88,7 @@ COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
-    chown -R ${user} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin && \
+    chown -R ${user}:${group} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin && \
     touch "${COPY_REFERENCE_FILE_LOG}"
 
 USER ${user}
