@@ -5,7 +5,7 @@ oc new-app $1
 
 if [ $# -eq 0 ]
   then
-    echo "No arguments supplied"
+    echo "Parameters NAMESPACE, No arguments supplied"
 fi
 
 fucntion getParameters() {

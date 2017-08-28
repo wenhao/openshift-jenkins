@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -eu
 
 cat <<EOF> ~/.kube/config
 apiVersion: v1
