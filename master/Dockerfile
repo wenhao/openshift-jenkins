@@ -88,8 +88,8 @@ COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
+    touch "${COPY_REFERENCE_FILE_LOG}" && \
     chown -R ${user}:${group} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin && \
-    touch "${COPY_REFERENCE_FILE_LOG}"
 
 USER ${user}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
