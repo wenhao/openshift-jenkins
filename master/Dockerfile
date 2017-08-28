@@ -99,7 +99,6 @@ COPY ./scripts/init-oc-config.sh /usr/local/bin/init-oc-config.sh
 RUN curl -fsSL https://github.com/openshift/origin/releases/download/${OPENSHIFT_VERSION}/openshift-origin-client-tools-${OPENSHIFT_VERSION}-${OPENSHIFT_COMMITID}-linux-64bit.tar.gz \
     -o /opt/openshift-origin-client-tools.tar.gz && \
     tar -xvf /opt/openshift-origin-client-tools.tar.gz && \
-    cp openshift-origin-client-tools-*/oc /usr/local/bin/ && \
-    /usr/local/bin/init-oc-config.sh
+    cp openshift-origin-client-tools-*/oc /usr/local/bin/ 
 
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
