@@ -26,6 +26,10 @@ ENV HOME=/var/jenkins_home \
     JENKINS_SLAVE_AGENT_PORT=${agent_port} \
     JENKINS_VERSION=${JENKINS_VERSION:-2.60.2}
 
+# Jenkins home directory is a volume, so configuration and build history
+# can be persisted and survive image upgrades
+VOLUME /var/jenkins_home
+
 # `/usr/share/jenkins/ref/` contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
 # or config file with your custom jenkins Docker image.
@@ -84,11 +88,18 @@ RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
 ARG OPENSHIFT_VERSION=v3.6.0
 ARG OPENSHIFT_HASH=c4dd4cf
 ENV OPENSHIFT_VERSION=${OPENSHIFT_VERSION:-v3.6.0} \
-    OPENSHIFT_HASH=${OPENSHIFT_HASH:-c4dd4cf}
+    OPENSHIFT_HASH=${OPENSHIFT_HASH:-c4dd4cf} \
+    OPENSHIFT_HOST="<OPENSHIFT_HOST>" \
+    OPENSHIFT_NAMESPACE="<OPENSHIFT_NAMESPACE>" \
+    OPENSHIFT_USER="<OPENSHIFT_USER>" \
+    OPENSHIFT_TOKEN="<OPENSHIFT_TOKEN>"
+
+COPY ./scripts/install-oc-config.sh /usr/local/bin/install-oc-config.sh
 
 RUN curl -fsSL https://github.com/openshift/origin/releases/download/${OPENSHIFT_VERSION}/openshift-origin-client-tools-${OPENSHIFT_VERSION}-${OPENSHIFT_HASH}-linux-64bit.tar.gz \
     -o /opt/openshift-origin-client-tools.tar.gz | tar -xz && \
     cp openshift-origin-client-tools-*/oc /usr/local/bin/ && \
+    /usr/local/bin/install-oc-config.sh && \
     oc version
 
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]

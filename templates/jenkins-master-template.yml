@@ -75,6 +75,14 @@ objects:
                   value: "${PASSWORD}"
                 - name: "JENKINS_HOME"
                   value: "${JENKINS_HOME}"
+                - name: "OPENSHIFT_HOST"
+                  value: "${OPENSHIFT_HOST}"
+                - name: "OPENSHIFT_NAMESPACE"
+                  value: "${NAMESPACE}"
+                - name: "OPENSHIFT_USER"
+                  value: "${OPENSHIFT_USER}"
+                - name: "OPENSHIFT_TOKEN"
+                  value: "${OPENSHIFT_TOKEN}"
               resources:
                 limits:
                   memory: "${MEMORY_LIMIT}"
@@ -155,10 +163,25 @@ parameters:
     description: "Directory of the Jenkins Home."
     value: "/var/jenkins_home"
     required: true
+  - name: "OPENSHIFT_HOST"
+    displayName: "OpenShift Host Without Protocol"
+    description: "The OpenShift host Without Protocol."
+    value: ""
+    required: true
   - name: "NAMESPACE"
-    displayName: "Jenkins ImageStream Namespace"
-    description: "The OpenShift Namespace where the Jenkins ImageStream resides."
-    value: "openshift"
+    displayName: "OpenShift Working Namespace"
+    description: "The OpenShift Working Namespace."
+    value: ""
+    required: true
+  - name: "OPENSHIFT_USER"
+    displayName: "OpenShift User"
+    description: "The OpenShift User."
+    value: ""
+    required: true
+  - name: "OPENSHIFT_TOKEN"
+    displayName: "OpenShift Token"
+    description: "The OpenShift Token."
+    value: ""
     required: true
   - name: "IMAGE_STREAM_TAG"
     displayName: "Jenkins ImageStreamTag"

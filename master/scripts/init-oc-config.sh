@@ -1,3 +1,6 @@
+#!/bin/bash
+
+cat <<EOF> ~/.kube/config
 apiVersion: v1
 clusters:
 - cluster:
@@ -9,11 +12,12 @@ contexts:
     cluster: ${OPENSHIFT_HOST}
     namespace: ${OPENSHIFT_NAMESPACE}
     user: ${OPENSHIFT_USER}/${OPENSHIFT_HOST}
-  name: ${OPENSHIFT_NAMESPACE}/${OPENSHIFT_HOST}/${}
-current-context: devops/${OPENSHIFT_HOST}/${OPENSHIFT_USER}
+  name: ${OPENSHIFT_NAMESPACE}/${OPENSHIFT_HOST}/${OPENSHIFT_USER}
+current-context: ${OPENSHIFT_NAMESPACE}/${OPENSHIFT_HOST}/${OPENSHIFT_USER}
 kind: Config
 preferences: {}
 users:
 - name: ${OPENSHIFT_USER}/${OPENSHIFT_HOST}
   user:
     token: ${OPENSHIFT_TOKEN}
+EOF
