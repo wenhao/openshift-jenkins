@@ -12,7 +12,7 @@ LABEL version=v1.0.0 \
       openshift.io.tags="jenkins,jenkins2,ci"
 
 # install java 8
-RUN yum install -y git wget zip unzip java-1.8.0-openjdk origin-clients
+RUN yum install -y git wget zip unzip java-1.8.0-openjdk
 
 # install jenkins
 ARG user=jenkins
@@ -33,8 +33,8 @@ ENV HOME=/var/jenkins_home \
 # Jenkins is run with user `jenkins`, uid = 1000
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
-#RUN groupadd -g ${gid} ${group} \
-#    && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+RUN groupadd -g ${gid} ${group} \
+    && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
 # `/usr/share/jenkins/ref/` contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
@@ -87,9 +87,20 @@ RUN echo -n ${JENKINS_VERSION:-2.60.2} > /usr/share/jenkins/ref/jenkins.install.
 COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
-    /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
-#    touch "${COPY_REFERENCE_FILE_LOG}" && \
-#    chown -R ${user}:${group} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin
+    /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
+    touch "${COPY_REFERENCE_FILE_LOG}" && \
+    chown -R ${user}:${group} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin
 
-#USER ${user}
+# install openshift client
+ARG OPENSHIFT_VERSION=v3.6.0
+ARG OPENSHIFT_HASH=c4dd4cf
+ENV OPENSHIFT_VERSION=${OPENSHIFT_VERSION:-v3.6.0} \
+    OPENSHIFT_HASH=${OPENSHIFT_HASH:-c4dd4cf}
+
+RUN curl -fsSL https://github.com/openshift/origin/releases/download/${OPENSHIFT_VERSION}/openshift-origin-client-tools-${OPENSHIFT_VERSION}-${OPENSHIFT_HASH}-linux-64bit.tar.gz \
+    -o /opt/openshift-origin-client-tools.tar.gz | tar -xz && \
+    cp openshift-origin-client-tools-*/oc /usr/local/bin/ && \
+    oc version
+
+USER ${uid}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
