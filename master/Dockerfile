@@ -97,7 +97,8 @@ ENV OPENSHIFT_VERSION=${OPENSHIFT_VERSION:-v3.6.0} \
 COPY ./scripts/init-oc-config.sh /usr/local/bin/init-oc-config.sh
 
 RUN curl -fsSL https://github.com/openshift/origin/releases/download/${OPENSHIFT_VERSION}/openshift-origin-client-tools-${OPENSHIFT_VERSION}-${OPENSHIFT_COMMITID}-linux-64bit.tar.gz \
-    -o /opt/openshift-origin-client-tools.tar.gz | tar -xz && \
+    -o /opt/openshift-origin-client-tools.tar.gz && \
+    tar -xvf /opt/openshift-origin-client-tools.tar.gz && \
     cp openshift-origin-client-tools-*/oc /usr/local/bin/ && \
     /usr/local/bin/install-oc-config.sh && \
     oc version
