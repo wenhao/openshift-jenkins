@@ -12,7 +12,7 @@ LABEL version=v1.0.0 \
       openshift.io.tags="jenkins,jenkins2,ci"
 
 # install java 8
-RUN yum install -y git wget zip unzip java-1.8.0-openjdk
+RUN yum install -y git wget zip unzip java-1.8.0-openjdk origin-clients
 
 # install jenkins
 ARG user=jenkins
@@ -89,7 +89,7 @@ COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
     touch "${COPY_REFERENCE_FILE_LOG}" && \
-    chown -R ${user}:${group} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin && \
+    chown -R ${user}:${group} $JENKINS_HOME /usr/share/jenkins/ref /usr/local/bin
 
 USER ${user}
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
