@@ -78,9 +78,9 @@ COPY ./scripts/plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN echo -n ${JENKINS_VERSION:-2.60.2} > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state && \
     echo -n ${JENKINS_VERSION:-2.60.2} > /usr/share/jenkins/ref/jenkins.install.InstallUtil.lastExecVersion
 
-COPY ./scripts/jenkins.sh /usr/local/bin/jenkins.sh
+COPY ./scripts/startup.sh /usr/local/bin/startup.sh
 
-RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/jenkins.sh && \
+RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/startup.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
     touch "${COPY_REFERENCE_FILE_LOG}"
 
@@ -98,7 +98,9 @@ COPY ./scripts/init-oc-config.sh /usr/local/bin/init-oc-config.sh
 
 RUN curl -fsSL https://github.com/openshift/origin/releases/download/${OPENSHIFT_VERSION}/openshift-origin-client-tools-${OPENSHIFT_VERSION}-${OPENSHIFT_COMMITID}-linux-64bit.tar.gz \
     -o /opt/openshift-origin-client-tools.tar.gz && \
-    tar -xvf /opt/openshift-origin-client-tools.tar.gz && \
-    cp openshift-origin-client-tools-*/oc /usr/local/bin/ 
+    tar -zxvf /opt/openshift-origin-client-tools.tar.gz && \
+    cp openshift-origin-client-tools-*/oc /usr/local/bin/ && \
+    mkdir ~/.kube && \
+    chmod +x /usr/local/bin/init-oc-config.sh
 
-ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
+ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/startup.sh"]
