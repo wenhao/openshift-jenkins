@@ -88,7 +88,7 @@ objects:
             - name: "${JENKINS_NAME}-data"
               persistentVolumeClaim:
                 claimName: "${JENKINS_NAME}"
-          restartPolicy: "OnFailure"
+          restartPolicy: "Always"
           dnsPolicy: "ClusterFirst"
   - kind: Service
     apiVersion: v1
