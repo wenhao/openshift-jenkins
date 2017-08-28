@@ -94,7 +94,7 @@ ENV OPENSHIFT_VERSION=${OPENSHIFT_VERSION:-v3.6.0} \
     OPENSHIFT_USER="<OPENSHIFT_USER>" \
     OPENSHIFT_TOKEN="<OPENSHIFT_TOKEN>"
 
-COPY ./scripts/install-oc-config.sh /usr/local/bin/install-oc-config.sh
+COPY ./scripts/init-oc-config.sh /usr/local/bin/init-oc-config.sh
 
 RUN curl -fsSL https://github.com/openshift/origin/releases/download/${OPENSHIFT_VERSION}/openshift-origin-client-tools-${OPENSHIFT_VERSION}-${OPENSHIFT_HASH}-linux-64bit.tar.gz \
     -o /opt/openshift-origin-client-tools.tar.gz | tar -xz && \
