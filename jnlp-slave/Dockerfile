@@ -37,19 +37,12 @@ COPY ./scripts/jenkins-slave /usr/local/bin/jenkins-slave
 RUN chmod a+x /usr/local/bin/jenkins-slave && \
     chmod a+w -R /home/jenkins
 
-# install jenkins-cli
-COPY ./bin/jenkins-cli.jar /usr/share/jenkins/jenkins-cli.jar
-RUN chmod 644 /usr/share/jenkins/jenkins-cli.jar
-# COPY ./scripts/create-slave /usr/local/bin/create-slave
-# RUN chmod a+x /usr/local/bin/create-slave
-
 VOLUME /home/jenkins/.jenkins
 VOLUME ${AGENT_WORKDIR}
 WORKDIR /home/jenkins
 
 # install devops build tools
 RUN yum install -y maven git perl
-
 
 # Standard SSH port
 EXPOSE 22
