@@ -52,7 +52,7 @@ objects:
               imagePullPolicy: "IfNotPresent"
               env:
                 - name: "JENKINS_URL"
-                  value: "http://${JENKINS_URL}:8080"
+                  value: "http://${JENKINS_URL}"
                 - name: "SLAVE_NAME"
                   value: "${SLAVE_NAME}"
                 - name: "AGENT_WORKDIR"
@@ -91,7 +91,7 @@ parameters:
   - name: "JENKINS_URL"
     displayName: "Jenkins Master URL"
     description: "URL of the Internal Jenkins Master Service IP."
-    value: "172.30.226.156"
+    value: "http://jenkins.url:8080"
     required: true
   - name: "SLAE_WORKDIR"
     displayName: "Jenkins Slave Home Directory"
