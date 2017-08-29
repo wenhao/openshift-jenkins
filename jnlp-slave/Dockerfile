@@ -8,7 +8,16 @@ LABEL version=v1.0.0 \
       openshift.io.tags="jenkins-slave"
 
 # install java 8
-RUN yum install -y wget
+RUN yum install -y wget zip unzip openssh openssh-server openssh-clients
+
+# Install a basic SSH server
+RUN sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd
+RUN mkdir -p /var/run/sshd
+
+# Generate hostkeys for sshd start
+RUN sshd-keygen
+
+
 ENV JAVA_VERSION=8u144 \
     BUILD_VERSION=b01
 
@@ -44,11 +53,18 @@ RUN chmod a+x /usr/local/bin/jenkins-slave && \
 # install jenkins-cli
 COPY ./bin/jenkins-cli.jar /usr/share/jenkins/jenkins-cli.jar
 RUN chmod 644 /usr/share/jenkins/jenkins-cli.jar
-COPY ./scripts/create-slave /usr/local/bin/create-slave
-RUN chmod a+x /usr/local/bin/create-slave
+# COPY ./scripts/create-slave /usr/local/bin/create-slave
+# RUN chmod a+x /usr/local/bin/create-slave
 
 VOLUME /home/jenkins/.jenkins
 VOLUME ${AGENT_WORKDIR}
 WORKDIR /home/jenkins
+
+# install devops build tools
+RUN yum install -y maven git perl
+
+
+# Standard SSH port
+EXPOSE 22
 
 ENTRYPOINT ["jenkins-slave"]
