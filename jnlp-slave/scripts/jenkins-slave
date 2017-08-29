@@ -43,7 +43,5 @@ else
 		fi
 	fi
 
-	create-slave
-
   exec java $JAVA_OPTS $JNLP_PROTOCOL_OPTS -jar /usr/share/jenkins/slave.jar -jnlpUrl $OPT_JENKINS_URL/computer/$OPT_JENKINS_SLAVE_NAME/slave-agent.jnlp
 fi
