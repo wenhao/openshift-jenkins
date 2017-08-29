@@ -6,6 +6,7 @@ if [ $# -eq 1 ]; then
 
 else
 
+	JENKINS_SLAVE_NAME=""
 	if [ -n "$SLAVE_NAME" ]; then
 		JENKINS_SLAVE_NAME="$SLAVE_NAME"
 	fi
