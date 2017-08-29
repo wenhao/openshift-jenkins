@@ -68,9 +68,8 @@ Also, Change `scripts/install-plugins.sh` line 73 to: `JENKINS_UC_DOWNLOAD=${JEN
 ### 创建token
 
 1. oc create serviceaccount <service_name>
-2. oc policy add-role-to-user admin system:serviceaccount:<project_name>:<service_name>
-3. oc describe serviceaccount <service_name>
-4. oc describe secret <token_name>
+2. oc policy add-role-to-user <role> system:serviceaccount:<project_name>:<service_name>
+3. oc sa get-token <service_name>
 
 ## 获取token
 
