@@ -6,7 +6,7 @@ Openshift Docker Jenkins Oracle Java8
 
 1. Centos7
 2. Oracle Java 1.8 latest
-3. Jenkins 2.60.2
+3. Jenkins 2.60.3
 
 ## Features
 
@@ -14,8 +14,8 @@ Openshift Docker Jenkins Oracle Java8
 2. Allow anonymous read access.
 3. Default user admin:admin.
 4. Disable Prevent Cross Site Request Forgery exploits.
-5. Skip Jenkins 2.60.2 Setup Wizard.
-6. Skip Jenkins 2.60.2 Upgrade Wizard.
+5. Skip Jenkins 2.60.3 Setup Wizard.
+6. Skip Jenkins 2.60.3 Upgrade Wizard.
 7. Pre-install Jenkins plugins.
 
 ## Build Image
