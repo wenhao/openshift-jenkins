@@ -84,23 +84,4 @@ RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/startup.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
     touch "${COPY_REFERENCE_FILE_LOG}"
 
-# install openshift client
-ARG OPENSHIFT_VERSION=v3.6.0
-ARG OPENSHIFT_COMMITID=c4dd4cf
-ENV OPENSHIFT_VERSION=${OPENSHIFT_VERSION:-v3.6.0} \
-    OPENSHIFT_COMMITID=${OPENSHIFT_COMMITID:-c4dd4cf} \
-    OPENSHIFT_HOST="<OPENSHIFT_HOST>" \
-    OPENSHIFT_NAMESPACE="<OPENSHIFT_NAMESPACE>" \
-    OPENSHIFT_USER="<OPENSHIFT_USER>" \
-    OPENSHIFT_TOKEN="<OPENSHIFT_TOKEN>"
-
-COPY ./scripts/init-oc-config.sh /usr/local/bin/init-oc-config.sh
-
-RUN curl -fsSL https://github.com/openshift/origin/releases/download/${OPENSHIFT_VERSION}/openshift-origin-client-tools-${OPENSHIFT_VERSION}-${OPENSHIFT_COMMITID}-linux-64bit.tar.gz \
-    -o /opt/openshift-origin-client-tools.tar.gz && \
-    tar -zxvf /opt/openshift-origin-client-tools.tar.gz && \
-    cp openshift-origin-client-tools-*/oc /usr/local/bin/ && \
-    mkdir ~/.kube && \
-    chmod +x /usr/local/bin/init-oc-config.sh
-
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/startup.sh"]
