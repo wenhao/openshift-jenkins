@@ -20,7 +20,7 @@ ARG agent_port=50000
 ARG JENKINS_VERSION=2.60.3
 
 ENV HOME=/var/jenkins_home \
-    JENKINS_HOME=/var/jenkins_home/jenkins \
+    JENKINS_HOME=$HOME/jenkins \
     JENKINS_ADMIN_USERNAME=admin \
     JENKINS_ADMIN_PASSWORD=admin \
     JENKINS_SLAVE_AGENT_PORT=${agent_port} \

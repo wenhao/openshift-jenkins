@@ -73,14 +73,14 @@ objects:
                   value: "${USERNAME}"
                 - name: "JENKINS_ADMIN_PASSWORD"
                   value: "${PASSWORD}"
-                - name: "JENKINS_HOME"
-                  value: "${JENKINS_HOME}"
+                - name: "HOME"
+                  value: "${HOME}"
               resources:
                 limits:
                   memory: "${MEMORY_LIMIT}"
               volumeMounts:
                 - name: "${JENKINS_NAME}-data"
-                  mountPath: "${JENKINS_HOME}"
+                  mountPath: "${HOME}"
               terminationMessagePath: "/dev/termination-log"
               securityContext:
                 privileged: false
@@ -150,7 +150,7 @@ parameters:
     description: "Password of the Jenkins Master Administrator."
     value: "admin"
     required: true
-  - name: "JENKINS_HOME"
+  - name: "HOME"
     displayName: "Jenkins Home Directory"
     description: "Directory of the Jenkins Home."
     value: "/var/jenkins_home"
