@@ -20,7 +20,7 @@ ARG agent_port=50000
 ARG JENKINS_VERSION=2.60.3
 
 ENV HOME=/var/jenkins_home \
-    JENKINS_HOME=$HOME/jenkins \
+    JENKINS_HOME=${HOME}/jenkins \
     JENKINS_ADMIN_USERNAME=admin \
     JENKINS_ADMIN_PASSWORD=admin \
     JENKINS_SLAVE_AGENT_PORT=${agent_port} \
@@ -29,7 +29,6 @@ ENV HOME=/var/jenkins_home \
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
 VOLUME /var/jenkins_home
-RUN mkdir -p $JENKINS_HOME
 
 # `/usr/share/jenkins/ref/` contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
@@ -65,7 +64,7 @@ EXPOSE ${http_port}
 # will be used by attached slave agents:
 EXPOSE ${agent_port}
 
-ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
+ENV COPY_REFERENCE_FILE_LOG ${JENKINS_HOME}/copy_reference_file.log
 
 COPY ./scripts/jenkins-support /usr/local/bin/jenkins-support
 
@@ -83,6 +82,7 @@ COPY ./scripts/startup.sh /usr/local/bin/startup.sh
 
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/startup.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
+    mkdir -p ${JENKINS_HOME} && \
     touch "${COPY_REFERENCE_FILE_LOG}"
 
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/startup.sh"]
