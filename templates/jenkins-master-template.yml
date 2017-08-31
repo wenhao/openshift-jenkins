@@ -158,7 +158,7 @@ parameters:
   - name: "NAMESPACE"
     displayName: "OpenShift Working Namespace"
     description: "The OpenShift Working Namespace."
-    value: ""
+    value: "devops"
     required: true
   - name: "IMAGE_STREAM_TAG"
     displayName: "Jenkins ImageStreamTag"
