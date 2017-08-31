@@ -18,8 +18,9 @@ RUN yum install -y git wget zip unzip java-1.8.0-openjdk
 ARG http_port=8080
 ARG agent_port=50000
 ARG JENKINS_VERSION=2.60.3
+ARG HOME=/var/jenkins_home
 
-ENV HOME=/var/jenkins_home \
+ENV HOME=${HOME:-/var/jenkins_home} \
     JENKINS_HOME=${HOME}/jenkins \
     JENKINS_ADMIN_USERNAME=admin \
     JENKINS_ADMIN_PASSWORD=admin \
