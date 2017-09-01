@@ -72,16 +72,6 @@ objects:
                 claimName: "${SLAVE_NAME}"
           restartPolicy: "Always"
           dnsPolicy: "ClusterFirst"
-  - kind: PersistentVolumeClaim
-    apiVersion: v1
-    metadata:
-      name: "${SLAVE_NAME}"
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: "${VOLUME_CAPACITY}"
 parameters:
   - name: "SLAVE_NAME"
     displayName: "Jenkins Master Server Name"
