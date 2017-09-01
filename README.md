@@ -57,8 +57,8 @@ Also, Change `scripts/install-plugins.sh` line 73 to: `JENKINS_UC_DOWNLOAD=${JEN
 11. oc whoami -t //获取token_value
 12. docker login -u <username> -p <token_value> <registry_ip>:<port>
 13. docker pull jenkins/jenkins:lts
-14. docker tag jenkins/jenkins:lts <IP>:<PORT>/openshift/<image_name>
-15. docker push <IP>:<PORT>/openshift/<image_name>:<version>
+14. docker tag jenkins/jenkins:lts <exposed internal registry>/openshift/<image_name>
+15. docker push <exposed internal registry>/openshift/<image_name>:<version>
 
 ### 查看jenkins机器
 
