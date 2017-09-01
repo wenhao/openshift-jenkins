@@ -69,7 +69,7 @@ objects:
           volumes:
             - name: "${SLAVE_NAME}-data"
               persistentVolumeClaim:
-                claimName: "${SLAVE_NAME}"
+                claimName: "${VOLUME_NAME}"
           restartPolicy: "Always"
           dnsPolicy: "ClusterFirst"
 parameters:
@@ -103,8 +103,8 @@ parameters:
     description: "Maximum amount of memory the container can use."
     value: "512Mi"
     required: true
-  - name: "VOLUME_CAPACITY"
-    displayName: "Volume Capacity"
-    description: "Volume space available for data, e.g. 512Mi, 2Gi."
-    value: "1Gi"
+  - name: "VOLUME_NAME"
+    displayName: "Volume Name"
+    description: "Volume Name of jenkins used."
+    value: "jenkins-master"
     required: true
