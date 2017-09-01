@@ -27,9 +27,7 @@ ENV HOME=${HOME:-/var/jenkins_home} \
     JENKINS_SLAVE_AGENT_PORT=${agent_port} \
     JENKINS_VERSION=${JENKINS_VERSION:-2.60.3}
 
-# Jenkins home directory is a volume, so configuration and build history
-# can be persisted and survive image upgrades
-VOLUME ${HOME}
+WORKDIR ${HOME}
 
 # `/usr/share/jenkins/ref/` contains all reference configuration we want
 # to set on a fresh new installation. Use it to bundle additional plugins
