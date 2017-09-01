@@ -84,6 +84,7 @@ COPY ./scripts/startup.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/startup.sh && \
     /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
     mkdir -p ${JENKINS_HOME} && \
+    mkdir -p ${HOME}/.profile.d && \
     touch "${COPY_REFERENCE_FILE_LOG}"
 
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/startup.sh"]
