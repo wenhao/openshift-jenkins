@@ -129,6 +129,7 @@ objects:
     metadata:
       name: "${JENKINS_NAME}"
     spec:
+      persistentVolumeReclaimPolicy: 
       accessModes:
         - ReadWriteMany
       resources:
