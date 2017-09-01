@@ -85,3 +85,12 @@ oc edit scc restricted
 runAsUser.Type to RunAsAny.
 
 Ensure allowPrivilegedContainer is set to false.
+
+## 策略
+
+1. 每个项目拥有一套Jenkins Master和若干个Jenkins Slave。
+2. Jenkins Master和Jenkins Slave的docker镜像保存在私有的docker仓库内。
+3. Jenkins Master和Jenkins Slave共用一个Volume。
+4. 借助Jenkins插件自动创建和回收Jenkins Slave。
+5. 长时间闲置则回收Jenkins Master。
+6. 项目完成之后回收所有资源（Service、Route、Volume等）。
