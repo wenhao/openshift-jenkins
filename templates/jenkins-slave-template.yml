@@ -52,7 +52,7 @@ objects:
               imagePullPolicy: "IfNotPresent"
               env:
                 - name: "JENKINS_URL"
-                  value: "http://${JENKINS_URL}"
+                  value: "${JENKINS_URL}"
                 - name: "SLAVE_NAME"
                   value: "${SLAVE_NAME}"
                 - name: "AGENT_WORKDIR"
