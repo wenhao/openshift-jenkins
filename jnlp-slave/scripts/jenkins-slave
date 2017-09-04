@@ -29,14 +29,5 @@ else
 		fi
 	fi
 
-	OPT_JENKINS_JAR_CACHE=""
-	if [ -n "$JENKINS_JAR_CACHE" ]; then
-		if [[ "$@" != *"${JENKINS_JAR_CACHE}"* ]]; then
-			OPT_JENKINS_JAR_CACHE="-jar-cache ${JENKINS_JAR_CACHE}"
-		else
-			echo "Error: JENKINS_JAR_CACHE is required environment variable"
-		fi
-	fi
-
   exec java $JAVA_OPTS $JNLP_PROTOCOL_OPTS -jar /usr/share/jenkins/slave.jar -jnlpUrl $OPT_JENKINS_URL/computer/$OPT_JENKINS_SLAVE_NAME/slave-agent.jnlp
 fi
