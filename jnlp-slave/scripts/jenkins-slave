@@ -6,11 +6,6 @@ if [ $# -eq 1 ]; then
 
 else
 
-	JENKINS_SLAVE_NAME=""
-	if [ -n "$SLAVE_NAME" ]; then
-		JENKINS_SLAVE_NAME="$SLAVE_NAME"
-	fi
-
 	if [ -z "$JNLP_PROTOCOL_OPTS" ]; then
 		echo "Warning: JnlpProtocol3 is disabled by default, use JNLP_PROTOCOL_OPTS to alter the behavior"
 		JNLP_PROTOCOL_OPTS="-Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=true"
@@ -26,9 +21,9 @@ else
 	fi
 
 	OPT_JENKINS_SLAVE_NAME=""
-	if [ -n "$JENKINS_SLAVE_NAME" ]; then
-		if [[ "$@" != *"${JENKINS_SLAVE_NAME}"* ]]; then
-			OPT_JENKINS_SLAVE_NAME="${JENKINS_SLAVE_NAME}"
+	if [ -n "$SLAVE_NAME" ]; then
+		if [[ "$@" != *"${SLAVE_NAME}"* ]]; then
+			OPT_JENKINS_SLAVE_NAME="${SLAVE_NAME}"
 		else
 			echo "Error: SLAVE_NAME is required environment variable"
 		fi
