@@ -11,27 +11,23 @@ LABEL version=v1.0.0 \
 RUN yum install -y wget zip unzip java-1.8.0-openjdk
 
 # install jenkins slave
-ENV HOME /home/jenkins
+ARG HOME=/home/jenkins
+ENV HOME ${HOME}
 
 ARG VERSION=3.10
-ARG AGENT_WORKDIR=/home/jenkins/agent
 
-RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
-  && chmod 755 /usr/share/jenkins \
-  && chmod 644 /usr/share/jenkins/slave.jar
+RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar && \
+    chmod 755 /usr/share/jenkins && \
+    chmod 644 /usr/share/jenkins/slave.jar
 
-ENV AGENT_WORKDIR=${AGENT_WORKDIR}
 RUN mkdir /home/jenkins && \
     mkdir /home/jenkins/.jenkins && \
-    mkdir -p ${AGENT_WORKDIR}
 
 COPY ./scripts/jenkins-slave /usr/local/bin/jenkins-slave
 
 RUN chmod a+x /usr/local/bin/jenkins-slave && \
     chmod a+w -R /home/jenkins
 
-VOLUME /home/jenkins/.jenkins
-VOLUME ${AGENT_WORKDIR}
 WORKDIR /home/jenkins
 
 # install devops build tools
