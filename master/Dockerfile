@@ -69,6 +69,9 @@ COPY ./scripts/jenkins-support /usr/local/bin/jenkins-support
 # from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup /usr/share/jenkins/ref/plugins from a support bundle
 COPY ./scripts/install-plugins /usr/local/bin/install-plugins
 
+# pre start script
+COPY ./scripts/pre-start /usr/local/bin/pre-start
+
 # curl -sSL "http://username:password@myhost.com:port/pluginManager/api/xml?depth=1&xpath=/*/*/shortName|/*/*/version&wrapper=plugins" | perl -pe 's/.*?<shortName>([\w-]+).*?<version>([^<]+)()(<\/\w+>)+/\1 \2\n/g'|sed 's/ /:/'
 COPY ./scripts/plugins.txt /usr/share/jenkins/ref/plugins.txt
 
