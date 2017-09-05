@@ -2,7 +2,6 @@ kind: Template
 apiVersion: v1
 labels:
   tempalte: "jenkins-jnlp-slave"
-  app: "jenkins-jnlp-slave"
 metadata:
   name: "jenkins-jnlp-slave"
   annotations:
