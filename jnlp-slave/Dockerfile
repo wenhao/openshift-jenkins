@@ -30,4 +30,4 @@ WORKDIR ${HOME}
 # install devops build tools
 RUN yum install -y maven git perl
 
-ENTRYPOINT ["startup"]
+ENTRYPOINT ["/usr/local/bin/startup"]
