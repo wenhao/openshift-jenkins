@@ -25,7 +25,6 @@ objects:
       replicas: 1
       selector:
         app: "${JENKINS_NAME}"
-        deploymentconfig: "${JENKINS_NAME}"
       strategy:
         type: "Recreate"
       triggers:
@@ -43,7 +42,6 @@ objects:
         metadata:
           labels:
             app: "${JENKINS_NAME}"
-            deploymentconfig: "${JENKINS_NAME}"
         spec:
           containers:
             - name: "jenkins-master"
@@ -92,7 +90,7 @@ objects:
   - kind: Service
     apiVersion: v1
     metadata:
-      name: "${JENKINS_NAME}"
+      name: "${JENKINS_NAME}-jenkins-master"
       labels:
         app: "${JENKINS_NAME}"
       annotations:
@@ -101,14 +99,30 @@ objects:
       ports:
         - name: "jenkins-master-web"
           protocol: "TCP"
-          port: 8080
+          port: 80
           targetPort: 8080
+          nodePort: 0
+      selector:
+        app: "${JENKINS_NAME}"
+      type: "ClusterIP"
+      sessionAffinity: "None"
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: "${JENKINS_NAME}-jenkins-slave"
+      labels:
+        app: "${JENKINS_NAME}"
+      annotations:
+        service.openshift.io/infrastructure: "true"
+    spec:
+      ports:
         - name: "jenkins-slave"
           protocol: "TCP"
           port: 50000
           targetPort: 50000
+          nodePort: 0
       selector:
-        deploymentconfig: "${JENKINS_NAME}"
+        app: "${JENKINS_NAME}"
       type: "ClusterIP"
       sessionAffinity: "None"
   - kind: Route
@@ -122,9 +136,10 @@ objects:
     spec:
       to:
         kind: Service
-        name: "${JENKINS_NAME}"
-      port:
-        targetPort: "jenkins-master-web"
+        name: "${JENKINS_NAME}-jenkins-master"
+      lts:
+        termination: "edge"
+        insecureEdgeTerminationPolicy: Redirect
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
