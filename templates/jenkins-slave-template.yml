@@ -55,13 +55,13 @@ objects:
                 - name: "SLAVE_NAME"
                   value: "${SLAVE_NAME}"
                 - name: "AGENT_WORKDIR"
-                  value: "${SLAEV_WORKDIR}"
+                  value: "${SLAVE_WORKDIR}"
               resources:
                 limits:
                   memory: "${MEMORY_LIMIT}"
               volumeMounts:
                 - name: "${SLAVE_NAME}-data"
-                  mountPath: "${SLAE_WORKDIR}"
+                  mountPath: "${SLAVE_WORKDIR}"
               terminationMessagePath: "/dev/termination-log"
               securityContext:
                 privileged: false
@@ -82,15 +82,15 @@ parameters:
     description: "URL of the Internal Jenkins Master Service IP."
     value: "http://jenkins.url:8080"
     required: true
-  - name: "SLAE_WORKDIR"
+  - name: "SLAVE_WORKDIR"
     displayName: "Jenkins Slave Home Directory"
     description: "Directory of the Jenkins Slave."
-    value: "/home/jenkins/agent"
+    value: "/var/jenkins_home"
     required: true
   - name: "NAMESPACE"
     displayName: "Jenkins ImageStream Namespace"
     description: "The OpenShift Namespace where the Jenkins ImageStream resides."
-    value: "openshift"
+    value: "devops"
     required: true
   - name: "IMAGE_STREAM_TAG"
     displayName: "Jenkins ImageStreamTag"

@@ -96,7 +96,6 @@ objects:
           protocol: "TCP"
           port: 80
           targetPort: 8080
-          nodePort: 0
       selector:
         app: "${JENKINS_NAME}"
       type: "ClusterIP"
@@ -115,7 +114,6 @@ objects:
           protocol: "TCP"
           port: 50000
           targetPort: 50000
-          nodePort: 0
       selector:
         app: "${JENKINS_NAME}"
       type: "ClusterIP"
@@ -132,9 +130,6 @@ objects:
       to:
         kind: Service
         name: "${JENKINS_NAME}-jenkins-master"
-      lts:
-        termination: "edge"
-        insecureEdgeTerminationPolicy: Redirect
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
