@@ -47,11 +47,6 @@ objects:
             - name: "jenkins-master"
               image: "jenkins-master"
               imagePullPolicy: "IfNotPresent"
-              ports:
-                - containerPort: 8080
-                  protocol: "TCP"
-                - containerPort: 50000
-                  protocol: "TCP"
               readinessProbe:
                 timeoutSeconds: 3
                 initialDelaySeconds: 3
