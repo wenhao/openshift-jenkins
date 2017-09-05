@@ -147,7 +147,6 @@ objects:
       labels:
         app: "${JENKINS_NAME}"
     spec:
-      persistentVolumeReclaimPolicy:
       accessModes:
         - ReadWriteMany
       resources:
