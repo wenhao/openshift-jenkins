@@ -26,6 +26,7 @@ ENV HOME=${HOME:-/var/jenkins_home} \
     JENKINS_ADMIN_PASSWORD=admin \
     JENKINS_SLAVE_AGENT_PORT=${agent_port} \
     JENKINS_VERSION=${JENKINS_VERSION:-2.60.3}
+    COPY_REFERENCE_FILE_LOG=${JENKINS_HOME}/copy_reference_file.log
 
 WORKDIR ${HOME}
 
@@ -63,12 +64,10 @@ EXPOSE ${http_port}
 # will be used by attached slave agents:
 EXPOSE ${agent_port}
 
-ENV COPY_REFERENCE_FILE_LOG ${JENKINS_HOME}/copy_reference_file.log
-
 COPY ./scripts/jenkins-support /usr/local/bin/jenkins-support
 
 # from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup /usr/share/jenkins/ref/plugins from a support bundle
-COPY ./scripts/install-plugins.sh /usr/local/bin/install-plugins.sh
+COPY ./scripts/install-plugins /usr/local/bin/install-plugins
 
 # curl -sSL "http://username:password@myhost.com:port/pluginManager/api/xml?depth=1&xpath=/*/*/shortName|/*/*/version&wrapper=plugins" | perl -pe 's/.*?<shortName>([\w-]+).*?<version>([^<]+)()(<\/\w+>)+/\1 \2\n/g'|sed 's/ /:/'
 COPY ./scripts/plugins.txt /usr/share/jenkins/ref/plugins.txt
@@ -77,11 +76,11 @@ COPY ./scripts/plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN echo -n ${JENKINS_VERSION:-2.60.3} > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state && \
     echo -n ${JENKINS_VERSION:-2.60.3} > /usr/share/jenkins/ref/jenkins.install.InstallUtil.lastExecVersion
 
-COPY ./scripts/startup.sh /usr/local/bin/startup.sh
+COPY ./scripts/startup /usr/local/bin/startup
 
-RUN chmod +x /usr/local/bin/install-plugins.sh /usr/local/bin/startup.sh && \
-    /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && \
+RUN chmod -R +x /usr/local/bin && \
+    /usr/local/bin/install-plugins < /usr/share/jenkins/ref/plugins.txt && \
     mkdir -p ${JENKINS_HOME} && \
     touch "${COPY_REFERENCE_FILE_LOG}"
 
-ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/startup.sh"]
+ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/startup"]
