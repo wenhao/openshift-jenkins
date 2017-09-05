@@ -85,7 +85,7 @@ objects:
   - kind: Service
     apiVersion: v1
     metadata:
-      name: "${JENKINS_NAME}-jenkins-master"
+      name: "${JENKINS_NAME}"
       labels:
         app: "${JENKINS_NAME}"
       annotations:
