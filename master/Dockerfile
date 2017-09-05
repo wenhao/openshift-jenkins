@@ -2,9 +2,6 @@ FROM centos:centos7
 
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
-# Jenkins LTS packages from
-# https://pkg.jenkins.io/redhat-stable/
-
 LABEL version=v1.0.0 \
       k8s.io.description="Jenkins is a continuous integration server" \
       k8s.io.display-name="Jenkins 2.60.3" \
@@ -12,7 +9,7 @@ LABEL version=v1.0.0 \
       openshift.io.tags="jenkins,jenkins2,ci"
 
 # install java 8
-RUN yum install -y git wget zip unzip java-1.8.0-openjdk
+RUN yum install -y git zip unzip java-1.8.0-openjdk
 
 # install jenkins
 ARG http_port=8080
@@ -69,8 +66,8 @@ COPY ./scripts/jenkins-support /usr/local/bin/jenkins-support
 # from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup /usr/share/jenkins/ref/plugins from a support bundle
 COPY ./scripts/install-plugins /usr/local/bin/install-plugins
 
-# pre start script
-COPY ./scripts/pre-start /usr/local/bin/pre-start
+# configure jenkins master before running
+COPY ./scripts/configure-jenkins-master /usr/local/bin/configure-jenkins-master
 
 # curl -sSL "http://username:password@myhost.com:port/pluginManager/api/xml?depth=1&xpath=/*/*/shortName|/*/*/version&wrapper=plugins" | perl -pe 's/.*?<shortName>([\w-]+).*?<version>([^<]+)()(<\/\w+>)+/\1 \2\n/g'|sed 's/ /:/'
 COPY ./scripts/plugins.txt /usr/share/jenkins/ref/plugins.txt
