@@ -1,7 +1,7 @@
 kind: Template
 apiVersion: v1
 labels:
-  tempalte: "jenkins-master"
+  template: "jenkins-master"
 metadata:
   name: "jenkins-master"
   annotations:
