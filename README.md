@@ -44,7 +44,7 @@ Also, Change `scripts/install-plugins.sh` line 73 to: `JENKINS_UC_DOWNLOAD=${JEN
 
 ### 上传自定义docker image
 
-1. oc cluster up --create-machinen
+1. oc cluster up --create-machine
 2. oc login -u system:admin
 3. oc project default
 4. oc get svc -n default | grep registry //获取internal registry IP
