@@ -12,7 +12,7 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
     JAVA_VERSION=1.8.0
 
-# install java 8 git
+# install java git
 RUN yum update && \
     yum install -y git \
                    zip \
@@ -21,5 +21,5 @@ RUN yum update && \
                    wget \
                    curl \
                    subversion \
-                   openssh-client \
-                   && yum clean all
+                   openssh-client && \
+    yum clean all
