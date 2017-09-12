@@ -1,5 +1,8 @@
 # openshift-jenkins
 
+1. **centos7-jdk8**: 基础镜像
+2. **openshift-jenkins-master**: jenkins master镜像
+3. **openshift-jenkins-jnlp-slave**: jenkins slave镜像
 
 ## openshift jenkins master
 

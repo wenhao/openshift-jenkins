@@ -54,14 +54,14 @@ objects:
                   value: "${JENKINS_URL}"
                 - name: "SLAVE_NAME"
                   value: "${SLAVE_NAME}"
-                - name: "AGENT_WORKDIR"
-                  value: "${SLAVE_WORKDIR}"
+                - name: "HOME"
+                  value: "${SLAVE_HOME}"
               resources:
                 limits:
                   memory: "${MEMORY_LIMIT}"
               volumeMounts:
                 - name: "${SLAVE_NAME}-data"
-                  mountPath: "${SLAVE_WORKDIR}"
+                  mountPath: "${SLAVE_HOME}"
               terminationMessagePath: "/dev/termination-log"
               securityContext:
                 privileged: false
@@ -82,7 +82,7 @@ parameters:
     description: "URL of the Internal Jenkins Master Service IP."
     value: "http://jenkins.url:8080"
     required: true
-  - name: "SLAVE_WORKDIR"
+  - name: "SLAVE_HOME"
     displayName: "Jenkins Slave Home Directory"
     description: "Directory of the Jenkins Slave."
     value: "/var/jenkins_home"
@@ -100,7 +100,7 @@ parameters:
   - name: "MEMORY_LIMIT"
     displayName: "Memory Limit"
     description: "Maximum amount of memory the container can use."
-    value: "512Mi"
+    value: "2Gi"
     required: true
   - name: "VOLUME_NAME"
     displayName: "Volume Name"

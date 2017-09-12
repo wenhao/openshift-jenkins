@@ -3,10 +3,9 @@ FROM wenhao/centos7-jdk8:v1.0.0
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
 LABEL version=v1.0.0 \
-      k8s.io.description="Jenkins is a continuous integration server" \
-      k8s.io.display-name="Jenkins 2.60.3" \
-      openshift.io.expose-services="8080:http" \
-      openshift.io.tags="jenkins,jenkins2,ci"
+      description="Jenkins is a continuous integration server" \
+      display-name="Jenkins 2.60.3" \
+      tags="jenkins,jenkins2,ci"
 
 # install jenkins
 ARG http_port=8080
