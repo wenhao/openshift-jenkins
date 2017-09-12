@@ -74,7 +74,8 @@ RUN echo -n ${JENKINS_VERSION:-2.60.3} > /usr/share/jenkins/ref/jenkins.install.
 
 COPY ./scripts/startup /usr/local/bin/startup
 
-RUN /usr/local/bin/install-plugins < /usr/share/jenkins/ref/plugins.txt && \
+RUN chmod -R +x /usr/local/bin;sync && \
+    /usr/local/bin/install-plugins < /usr/share/jenkins/ref/plugins.txt && \
     mkdir -p ${JENKINS_HOME} && \
     touch "${COPY_REFERENCE_FILE_LOG}"
 
