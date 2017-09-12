@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#! /bin/bash -eu
 
 # compare if version1 < version2
 versionLT() {

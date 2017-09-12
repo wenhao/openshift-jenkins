@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/bash -e
 #
 # This script is a place-holder for slave images to override
 #
