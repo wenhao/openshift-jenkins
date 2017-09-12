@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM wenhao/centos7-jdk8:v1.0.0
 
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
@@ -7,9 +7,6 @@ LABEL version=v1.0.0 \
       k8s.io.display-name="Jenkins 2.60.3" \
       openshift.io.expose-services="8080:http" \
       openshift.io.tags="jenkins,jenkins2,ci"
-
-# install java 8
-RUN yum install -y git zip unzip java-1.8.0-openjdk
 
 # install jenkins
 ARG http_port=8080

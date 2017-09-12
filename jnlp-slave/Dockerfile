@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM wenhao/centos7-jdk8:v1.0.0
 
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
@@ -6,9 +6,6 @@ LABEL version=v1.0.0 \
       k8s.io.description="Jenkins is a continuous integration server" \
       k8s.io.display-name="Jenkins Slave 3.10" \
       openshift.io.tags="jenkins-slave"
-
-# install java 8
-RUN yum install -y wget zip unzip java-1.8.0-openjdk
 
 # install jenkins slave
 ARG HOME=/home/jenkins
@@ -26,8 +23,5 @@ RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-c
     chmod -R a+w /home/jenkins
 
 WORKDIR ${HOME}
-
-# install devops build tools
-RUN yum install -y maven git perl
 
 ENTRYPOINT ["/usr/local/bin/startup"]
