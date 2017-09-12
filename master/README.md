@@ -1,11 +1,11 @@
 # openshift-jenkins-master
 
-Openshift Docker Jenkins Oracle Java8
+Openshift Docker Jenkins Master
 
 ## Environemnts
 
 1. Centos7
-2. Oracle Java 1.8 latest
+2. OpenJDK 8
 3. Jenkins 2.60.3
 
 ## Features

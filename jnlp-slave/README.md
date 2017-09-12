@@ -6,6 +6,7 @@ Required environment variables:
 
 * `JENKINS_URL`: url for the Jenkins server
 * `SLAVE_NAME`: slave name, if not set as an argument
+* `HOME`: slave home
 
 ## Configuration specifics
 
