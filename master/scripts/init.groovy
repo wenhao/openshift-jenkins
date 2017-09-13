@@ -14,7 +14,7 @@ def instance = Jenkins.getInstance()
 
 // set slave port
 def env = System.getenv()
-int port = env['JENKINS_SLAVE_AGENT_PORT'].toInteger()
+int port = 50000
 instance.setSlaveAgentPort(port)
 
 // set default user
@@ -94,6 +94,6 @@ strategy.add(jenkins.metrics.api.Metrics.VIEW, "anonymous")
 instance.setAuthorizationStrategy(strategy)
 
 // set executors
-instance.setNumExecutors(5)
+instance.setNumExecutors(0)
 
 instance.save()

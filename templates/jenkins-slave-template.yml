@@ -57,6 +57,8 @@ objects:
                 - name: "HOME"
                   value: "${SLAVE_HOME}"
               resources:
+                requests:
+                  memory: "256Mi"
                 limits:
                   memory: "${MEMORY_LIMIT}"
               volumeMounts:

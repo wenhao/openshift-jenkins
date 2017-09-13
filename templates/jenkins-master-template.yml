@@ -68,6 +68,8 @@ objects:
                 - name: "HOME"
                   value: "${HOME}"
               resources:
+                requests:
+                  memory: "512Mi"
                 limits:
                   memory: "${MEMORY_LIMIT}"
               volumeMounts:
