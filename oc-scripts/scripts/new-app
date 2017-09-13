@@ -1,0 +1,115 @@
+#!/bin/bash
+#
+
+version="1.0.0"
+
+die()
+{
+	local _ret=$2
+	test -n "$_ret" || _ret=1
+	test "$_PRINT_HELP" = yes && print_help >&2
+	echo "$1" >&2
+	exit ${_ret}
+}
+
+begins_with_short_option()
+{
+	local first_option all_short_options
+	all_short_options='peh'
+	first_option="${1:0:1}"
+	test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
+}
+
+# THE DEFAULTS INITIALIZATION - POSITIONALS
+_positionals=()
+# THE DEFAULTS INITIALIZATION - OPTIONALS
+_arg_parameter=
+_arg_env=
+
+print_help ()
+{
+	printf "%s\n" "Create a new application by specifying source code, templates, and/or images"
+	printf 'Usage: %s [-p|--parameter <arg>] [-e|--env <arg>] [-h|--help] <name>\n' "$0"
+	printf "\t%s\n" "<name>: value of (IMAGE | IMAGESTREAM | TEMPLATE | PATH | URL ...)"
+	printf "\t%s\n" "-p,--parameter: optional template parameter for openshift client (no default)"
+	printf "\t%s\n" "-e,--env: optional environment for openshift client (no default)"
+  printf "\t%s\n" "-v,--version: Prints version"
+	printf "\t%s\n" "-h,--help: Prints help"
+}
+
+parse_commandline ()
+{
+	while test $# -gt 0
+	do
+		_key="$1"
+		case "$_key" in
+			-p|--parameter)
+				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+				_arg_parameter="$2"
+				shift
+				;;
+			--parameter=*)
+				_arg_parameter="${_key##--parameter=}"
+				;;
+			-p*)
+				_arg_parameter="${_key##-p}"
+				;;
+			-e|--env)
+				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+				_arg_env="$2"
+				shift
+				;;
+			--env=*)
+				_arg_env="${_key##--env=}"
+				;;
+			-e*)
+				_arg_env="${_key##-e}"
+				;;
+      -v|--version)
+				echo ${version}
+				exit 0
+				;;
+			-h|--help)
+				print_help
+				exit 0
+				;;
+			-h*)
+				print_help
+				exit 0
+				;;
+			*)
+				_positionals+=("$1")
+				;;
+		esac
+		shift
+	done
+}
+
+
+handle_passed_args_count ()
+{
+	_required_args_string="'name'"
+	test ${#_positionals[@]} -lt 1 && _PRINT_HELP=yes die "FATAL ERROR: Not enough positional arguments - we require exactly 1 (namely: $_required_args_string), but got only ${#_positionals[@]}." 1
+	test ${#_positionals[@]} -gt 1 && _PRINT_HELP=yes die "FATAL ERROR: There were spurious positional arguments --- we expect exactly 1 (namely: $_required_args_string), but got ${#_positionals[@]} (the last one was: '${_positionals[*]: -1}')." 1
+}
+
+assign_positional_args ()
+{
+	_positional_names=('_arg_name' )
+
+	for (( ii = 0; ii < ${#_positionals[@]}; ii++))
+	do
+		eval "${_positional_names[ii]}=\${_positionals[ii]}" || die "Error during argument parsing, possibly an Argbash bug." 1
+	done
+}
+
+parse_commandline "$@"
+handle_passed_args_count
+assign_positional_args
+
+new_app()
+{
+  new_app_error=`oc new-app ${_positionals} ${}`
+}
+
+new_app

@@ -1,0 +1,6 @@
+export OPENSHIFT_HOST="<HOST:PORT>"
+export OPENSHIFT_NAMESPACE="<NAMESPACE>"
+export OPENSHIFT_USER="<USER>"
+export OPENSHIFT_TOKEN="<SERVICE_TOKEN>"
+
+oc-authentication.sh
