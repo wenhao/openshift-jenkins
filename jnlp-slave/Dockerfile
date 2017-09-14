@@ -1,4 +1,4 @@
-FROM wenhao/centos7-jdk8:v1.0.0
+FROM wenhao/centos-java:7-8u144
 
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
