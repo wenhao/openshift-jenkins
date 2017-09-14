@@ -22,9 +22,10 @@ RUN yum update && \
                    curl \
                    subversion \
                    openssh-client && \
-    wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-linux-x64.rpm && \
+                   yum clean all
+
+RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-linux-x64.rpm && \
     yum -y install /tmp/jdk-$JAVA_VERSION-linux-x64.rpm && \
-    yum clean all && \
     alternatives --install /usr/bin/java jar /usr/java/latest/bin/java 200000 && \
     alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 200000 && \
     alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 200000
