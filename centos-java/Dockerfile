@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM centos:latest
 
 MAINTAINER Wen Hao (https://github.com/wenhao)
 
