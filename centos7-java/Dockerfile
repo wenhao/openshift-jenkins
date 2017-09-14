@@ -14,20 +14,10 @@ ENV LANG=en_US.UTF-8 \
     BUILD_VERSION=b01
 
 # install java git
-RUN yum update && \
-    yum install -y git \
-                   zip \
-                   unzip \
-                   wget \
-                   curl \
-                   subversion \
-                   openssh-client && \
-                   yum clean all
-
-RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-linux-x64.rpm && \
+RUN yum -y update && \
+    yum -y install git zip unzip wget curl openssh-client && \
+    wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/090f390dda5b47b9b721c7dfaa008135/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-$JAVA_VERSION-linux-x64.rpm && \
     yum -y install /tmp/jdk-$JAVA_VERSION-linux-x64.rpm && \
-    alternatives --install /usr/bin/java jar /usr/java/latest/bin/java 200000 && \
-    alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 200000 && \
-    alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 200000
+    yum clean all
 
 ENV JAVA_HOME=/usr/java/latest
